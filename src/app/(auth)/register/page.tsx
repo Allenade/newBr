@@ -6,8 +6,10 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useUserStore } from "@/store/userStore";
-import { supabase } from "@/lib/supabase/supabase";
+import { useUserStore } from "@/lib/store/userStore";
+import { createClient } from "@/services/db/supabase/client";
+
+const supabase = createClient();
 
 export default function RegisterPage() {
   const router = useRouter();

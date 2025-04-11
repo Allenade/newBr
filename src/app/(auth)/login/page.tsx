@@ -6,8 +6,10 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useUserStore } from "@/store/userStore";
-import { supabase } from "@/lib/supabase/supabase";
+import { useUserStore } from "@/lib/store/userStore";
+import { createClient } from "@/services/db/supabase/client";
+
+const supabase = createClient();
 
 // Admin credentials
 const ADMIN_EMAIL = "allenumunade@gmail.com";
@@ -77,7 +79,7 @@ export default function LoginPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Something went wrong during login."
+          : "Something went wrong during login.",
       );
     } finally {
       setIsLoading(false);
