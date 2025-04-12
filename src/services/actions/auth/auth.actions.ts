@@ -4,6 +4,7 @@ import { Supabase } from "@/services/db/supabase/ssr";
 import type { AuthActions } from "@/services/actions/auth/interfaces/auth.actions.dto";
 import { handleError } from "@/lib/utils";
 import { createProfileAction } from "@/services/actions/profile/profile.actions";
+import { redirect, RedirectType } from "next/navigation";
 
 // ~ =============================================>
 // ~ ======= Sign up User with email and Password
@@ -59,4 +60,14 @@ export const getCurrentUser = async () => {
   const { data: user, error } = await client.auth.getUser();
   handleError(error);
   return user.user;
+};
+
+// ~ =============================================>
+// ~ ======= Sign out
+// ~ =============================================>
+export const signOutUser = async () => {
+  const client = await new Supabase().ssr_client();
+  const { error } = await client.auth.signOut();
+  handleError(error);
+  redirect("/auth/signin", RedirectType.replace);
 };

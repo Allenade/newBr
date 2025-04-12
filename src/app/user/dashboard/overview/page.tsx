@@ -10,6 +10,7 @@ type ComponentProps = {};
 
 const UserOverviewPage: FC<ComponentProps> = ({}) => {
   const { profile, profileIsLoading } = useUser();
+
   return (
     <Block>
       <BlockBody>

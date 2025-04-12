@@ -38,7 +38,7 @@ import { cn } from "@/lib/utils";
 type ComponentProps = {};
 
 const UserSidebar: FC<ComponentProps> = ({}) => {
-  const { isLoadingUser } = useAuth();
+  const { isLoadingUser, signOut } = useAuth();
   const { profile, profileIsLoading } = useUser();
   const { state } = useSidebar();
   const pathname = usePathname();
@@ -130,7 +130,10 @@ const UserSidebar: FC<ComponentProps> = ({}) => {
           <SidebarGroupContent>
             <SidebarMenu>
               <SidebarMenuItem>
-                <SidebarMenuButton className="text-destructive">
+                <SidebarMenuButton
+                  className="text-destructive"
+                  onClick={signOut}
+                >
                   <LogOut size={18} strokeWidth={1.3} />
                   <span>Sign out</span>
                 </SidebarMenuButton>

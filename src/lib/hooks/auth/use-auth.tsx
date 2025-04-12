@@ -6,6 +6,7 @@ import {
   signInUserWithEmailPassword,
   signUpWithEmailAndPassword,
   getCurrentUser,
+  signOutUser,
 } from "@/services/actions/auth/auth.actions";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -63,6 +64,11 @@ export const useAuth = () => {
     staleTime: 5000,
   });
 
+  // ~ ======= Sign out user  ======= ~
+  const signOut = async () => {
+    await signOutUser();
+  };
+
   // ~ ======= Returns ======= ~
   return {
     signUpWithEmail,
@@ -71,5 +77,6 @@ export const useAuth = () => {
     isSigningIn,
     user,
     isLoadingUser,
+    signOut,
   };
 };

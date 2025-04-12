@@ -10,6 +10,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@casl/ability": "^6.7.3",
+    "@casl/react": "^5.0.0",
     "@hookform/resolvers": "^5.0.1",
     "@radix-ui/react-alert-dialog": "^1.1.6",
     "@radix-ui/react-avatar": "^1.1.4",
