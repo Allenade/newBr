@@ -19,12 +19,3 @@ export const defineAbility = (role: Permissions.Roles) => {
 
   return build();
 };
-
-const permissions = defineAbility(Permissions.Roles.user);
-
-console.log(
-  permissions.can(
-    Permissions.Actions.view,
-    Permissions.Entities.admin_dashboard,
-  ),
-);
