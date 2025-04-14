@@ -24,6 +24,8 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { subscriptionPlans } from "@/services/db/schema/subscription-plans.schema";
+import { useMutateSubscriptionPlan } from "@/lib/hooks/subscription-plans/use-mutate-subscription-plan";
+import { useEffect } from "react";
 
 // ~ Use inferred type from the actual schema
 type PlanData = typeof subscriptionPlans.$inferSelect;
@@ -56,6 +58,7 @@ const EditPlansSheet: React.FC<ComponentProps> = ({
 	onSave,
 	isSubmitting = false,
 }) => {
+	const { updateSubscriptionPlan, isUpdating } = useMutateSubscriptionPlan();
 	// ~ Initialize form with React Hook Form
 	const form = useForm<FormValues>({
 		resolver: zodResolver(formSchema),
@@ -82,20 +85,73 @@ const EditPlansSheet: React.FC<ComponentProps> = ({
 		},
 	});
 
+	// ~ Reset form values when planData changes
+	useEffect(() => {
+		if (planData) {
+			form.reset({
+				name: planData.name || "",
+				description: planData.description || null,
+				price:
+					typeof planData.price === "string"
+						? Number(planData.price)
+						: planData.price || null,
+				duration:
+					typeof planData.duration === "string"
+						? Number(planData.duration)
+						: planData.duration || null,
+				features: planData.features || [],
+				bonusAmount:
+					typeof planData.bonusAmount === "string"
+						? Number(planData.bonusAmount)
+						: planData.bonusAmount || null,
+				returnPercent:
+					typeof planData.returnPercent === "string"
+						? Number(planData.returnPercent)
+						: planData.returnPercent || null,
+			});
+		}
+	}, [planData, form]);
+
 	// ~ Handle features as comma-separated string
 	const featuresString = planData?.features?.join(", ") || "";
 
 	// ~ Handle form submission
-	const onSubmit = (values: FormValues) => {
+	const onSubmit = async (values: FormValues) => {
+		if (!planData?.id) {
+			console.error("Cannot update a plan without an ID");
+			return;
+		}
+
 		// ~ Combine form values with existing planData
 		const updatedData: PlanData = {
-			id: planData?.id || "",
-			createdAt: planData?.createdAt || new Date().toISOString(),
+			id: planData.id,
+			createdAt: planData.createdAt || new Date().toISOString(),
 			updatedAt: new Date().toISOString(),
 			...values,
 		} as PlanData;
 
+		// ~ Use the update hook to persist changes
+		await updateSubscriptionPlan({
+			id: planData.id,
+			data: {
+				name: values.name,
+				description: values.description,
+				price: values.price !== null ? values.price.toString() : null,
+				duration: values.duration !== null ? values.duration.toString() : null,
+				features: values.features,
+				bonusAmount:
+					values.bonusAmount !== null ? values.bonusAmount.toString() : null,
+				returnPercent:
+					values.returnPercent !== null
+						? values.returnPercent.toString()
+						: null,
+				updatedAt: new Date().toISOString(),
+			},
+		});
+
+		// ~ Call onSave callback if provided (for additional side effects)
 		if (onSave) onSave(updatedData);
+
 		setOpen(false);
 	};
 
@@ -294,8 +350,12 @@ const EditPlansSheet: React.FC<ComponentProps> = ({
 						/>
 
 						<SheetFooter>
-							<Button type="submit" className="w-full mt-4">
-								{isSubmitting ? (
+							<Button
+								type="submit"
+								className="w-full mt-4"
+								disabled={isUpdating}
+							>
+								{isUpdating ? (
 									<>
 										<Loader2 className="w-4 h-4 mr-2 animate-spin" />
 										<span>Saving...</span>

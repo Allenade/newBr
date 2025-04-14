@@ -40,6 +40,9 @@ export const useMutateSubscriptionPlan = () => {
 				queryClient.invalidateQueries({
 					queryKey: ["subscription-plans", data?.id],
 				});
+				queryClient.invalidateQueries({
+					queryKey: ["subscription-plans"],
+				});
 			},
 
 			onError: () => {
