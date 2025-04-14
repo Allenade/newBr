@@ -1,21 +1,35 @@
 import { AbilityBuilder, createMongoAbility } from "@casl/ability";
-import { Permissions } from "@/lib/permissions/interfaces/permissions.dto";
+import { UserPermissions } from "@/lib/permissions/interfaces/permissions.dto";
 
-export const defineAbility = (role: Permissions.Roles) => {
-  const { can, cannot, build } = new AbilityBuilder(createMongoAbility);
+export const defineAbility = (role: UserPermissions.Roles) => {
+	const { can, cannot, build } = new AbilityBuilder(createMongoAbility);
 
-  // ~ ======= Admin access ======= ~
-  if (role === Permissions.Roles.admin) {
-    can(Permissions.Actions.view, Permissions.Entities.admin_dashboard);
-    can(Permissions.Actions.manage, Permissions.Entities.users);
-    can(Permissions.Actions.manage, Permissions.Entities.trades);
-  }
+	// ~ ======= Admin access ======= ~
+	if (role === UserPermissions.Roles.admin) {
+		can(
+			UserPermissions.Actions.manage,
+			UserPermissions.Entities.admin_dashboard
+		);
+		can(UserPermissions.Actions.view, UserPermissions.Entities.admin_dashboard);
+		can(UserPermissions.Actions.manage, UserPermissions.Entities.users);
+		can(UserPermissions.Actions.manage, UserPermissions.Entities.trades);
+	}
 
-  // ~ ======= User access ======= ~
-  if (role === Permissions.Roles.user) {
-    can(Permissions.Actions.manage, Permissions.Entities.user_dashboard);
-    cannot(Permissions.Actions.manage, Permissions.Entities.admin_dashboard);
-  }
+	// ~ ======= User access ======= ~
+	if (role === UserPermissions.Roles.user) {
+		can(
+			UserPermissions.Actions.manage,
+			UserPermissions.Entities.user_dashboard
+		);
+		cannot(
+			UserPermissions.Actions.manage,
+			UserPermissions.Entities.admin_dashboard
+		);
+		cannot(
+			UserPermissions.Actions.view,
+			UserPermissions.Entities.admin_dashboard
+		);
+	}
 
-  return build();
+	return build();
 };

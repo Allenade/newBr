@@ -2,7 +2,6 @@ import { drizzle, PostgresJsDatabase } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 
 // ~ ======= schema imports  -->
-
 const databaseUrl = process.env.DATABASE_URL;
 
 if (!databaseUrl) {

@@ -1,4 +1,4 @@
-export namespace Permissions {
+export namespace UserPermissions {
   export enum Roles {
     admin = "admin",
     user = "user",

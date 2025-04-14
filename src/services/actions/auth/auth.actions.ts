@@ -43,13 +43,13 @@ export const signInUserWithEmailPassword = async (
   const { email, password } = signInData;
   const client = await new Supabase().ssr_client();
 
-  const { error } = await client.auth.signInWithPassword({
+  const { data: user, error } = await client.auth.signInWithPassword({
     email,
     password,
   });
 
   handleError(error);
-  return null;
+  return user?.user;
 };
 
 // ~ =============================================>

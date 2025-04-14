@@ -22,6 +22,13 @@ export const getProfileAction = async (id: string) => {
 };
 
 // ~ =============================================>
+// ~ ======= Get all profiles  -->
+// ~ =============================================>
+export const getALlProfilesAction = async () => {
+  return db.select().from(profiles);
+};
+
+// ~ =============================================>
 // ~ ======= Update a profile
 // ~ =============================================>
 export const updateProfileAction = async (

@@ -2,7 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
+	return twMerge(clsx(inputs));
 }
 
 /**
@@ -14,8 +14,8 @@ export function cn(...inputs: ClassValue[]) {
  * @returns {Promise<T | null>} - A promise that resolves to the first item in the array, or null if the array is empty.
  */
 export async function getSingle<T>(query: Promise<T[]>): Promise<T | null> {
-  const results = await query;
-  return results.length > 0 ? results[0] : null;
+	const results = await query;
+	return results.length > 0 ? results[0] : null;
 }
 
 /**
@@ -23,8 +23,8 @@ export async function getSingle<T>(query: Promise<T[]>): Promise<T | null> {
  * @returns {string} A URL string for a DiceBear icon with a random seed.
  */
 export function generateIconUrl(): string {
-  const randomSeed = Math.random().toString(36).substring(2, 15); // Generate a random seed
-  return `https://api.dicebear.com/7.x/shapes/svg?seed=${randomSeed}`;
+	const randomSeed = Math.random().toString(36).substring(2, 15); // Generate a random seed
+	return `https://api.dicebear.com/7.x/shapes/svg?seed=${randomSeed}`;
 }
 
 /**
@@ -41,22 +41,22 @@ export function generateIconUrl(): string {
  * @throws {Error} If a custom message is provided or if the error requires rethrowing after logging.
  */
 export const handleError = (error: any, customMessage?: string) => {
-  // ~ ======= if no error ======= ~
-  if (!error) return;
+	// ~ ======= if no error ======= ~
+	if (!error) return;
 
-  // ~ ======= if custom error  ======= ~
-  if (customMessage) {
-    console.log(customMessage);
-    throw new Error(customMessage);
-  }
+	// ~ ======= if custom error  ======= ~
+	if (customMessage) {
+		console.log(customMessage);
+		throw new Error(customMessage);
+	}
 
-  // ~ ======= if its an instance of Error ======= ~
-  if (error instanceof Error) {
-    console.log(error.message);
-    throw error;
-  }
+	// ~ ======= if its an instance of Error ======= ~
+	if (error instanceof Error) {
+		console.log(error.message);
+		throw error;
+	}
 
-  // ~ ======= default ======= ~
-  console.log(error);
-  throw new Error("An unknown error occurred.");
+	// ~ ======= default ======= ~
+	console.log(error);
+	throw new Error("An unknown error occurred.");
 };
