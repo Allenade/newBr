@@ -21,7 +21,6 @@
     "paths": {
       "@/*": ["./src/*"],
       "@/schemas/*": ["./src/services/db/schema/*"]
-
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],

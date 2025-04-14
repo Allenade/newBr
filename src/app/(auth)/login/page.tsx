@@ -79,7 +79,7 @@ export default function LoginPage() {
       setError(
         err instanceof Error
           ? err.message
-          : "Something went wrong during login.",
+          : "Something went wrong during login."
       );
     } finally {
       setIsLoading(false);

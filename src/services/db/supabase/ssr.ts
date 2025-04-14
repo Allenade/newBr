@@ -27,7 +27,7 @@ class Supabase {
         setAll(cookies_to_set) {
           try {
             cookies_to_set.forEach(({ name, value, options }) =>
-              cookie_store.set(name, value, options),
+              cookie_store.set(name, value, options)
             );
           } catch {}
         },

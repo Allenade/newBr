@@ -10,7 +10,7 @@ import { redirect, RedirectType } from "next/navigation";
 // ~ ======= Sign up User with email and Password
 // ~ =============================================>
 export const signUpWithEmailAndPassword = async (
-  profileData: AuthActions.SignUpProps,
+  profileData: AuthActions.SignUpProps
 ) => {
   const { email, password } = profileData;
   const client = await new Supabase().ssr_client();
@@ -38,7 +38,7 @@ export const signUpWithEmailAndPassword = async (
 // ~ ======= Sign in user with Email & Password
 // ~ =============================================>
 export const signInUserWithEmailPassword = async (
-  signInData: AuthActions.SignInProps,
+  signInData: AuthActions.SignInProps
 ) => {
   const { email, password } = signInData;
   const client = await new Supabase().ssr_client();

@@ -9,7 +9,7 @@ import { eq } from "drizzle-orm";
 // ~ ======= Create a new profile
 // ~ =============================================>
 export const createProfileAction = async (
-  profileData: typeof profiles.$inferInsert,
+  profileData: typeof profiles.$inferInsert
 ) => {
   return await getSingle(db.insert(profiles).values(profileData).returning());
 };
@@ -33,9 +33,16 @@ export const getALlProfilesAction = async () => {
 // ~ =============================================>
 export const updateProfileAction = async (
   id: string,
-  updateData: Partial<typeof profiles.$inferSelect>,
+  updateData: Partial<typeof profiles.$inferSelect>
 ) => {
   return await getSingle(
-    db.update(profiles).set(updateData).where(eq(profiles.id, id)).returning(),
+    db.update(profiles).set(updateData).where(eq(profiles.id, id)).returning()
   );
+};
+
+// ~ =============================================>
+// ~ ======= Delete a profile
+// ~ =============================================>
+export const deleteProfileAction = async (id: string) => {
+  return await db.delete(profiles).where(eq(profiles.id, id)).returning();
 };

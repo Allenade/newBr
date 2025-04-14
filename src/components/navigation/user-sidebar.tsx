@@ -16,16 +16,13 @@ import {
 } from "@/components/ui/sidebar";
 import {
   BanknoteArrowDown,
-  BanknoteArrowUp,
-  ChartCandlestick,
   Cog,
-  Coins,
-  User,
   HistoryIcon,
   LayoutDashboard,
-  LucideIcon,
-  MessageSquareText,
   LogOut,
+  Coins,
+  User,
+  LucideIcon,
 } from "lucide-react";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -35,7 +32,7 @@ import { useAuth } from "@/lib/hooks/auth/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
-type ComponentProps = {};
+type ComponentProps = Record<string, never>;
 
 const UserSidebar: FC<ComponentProps> = ({}) => {
   const { isLoadingUser, signOut } = useAuth();
@@ -86,7 +83,7 @@ const UserSidebar: FC<ComponentProps> = ({}) => {
                     <h3
                       className={cn(
                         "font-medium leading-none text-sm",
-                        !fullName && "text-muted-foreground",
+                        !fullName && "text-muted-foreground"
                       )}
                     >
                       {fullName || "Anonymous User"}
@@ -155,32 +152,21 @@ export default UserSidebar;
 
 // ~ ======= Sidebar menu links  ======= ~
 const sidebarLinks: { label: string; icon: LucideIcon; href: string }[] = [
-  { href: "/user/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  {
+    href: "/user/dashboard/overview",
+    label: "Overview",
+    icon: LayoutDashboard,
+  },
   { href: "/user/dashboard/purchase", label: "Purchase plan", icon: Coins },
-  {
-    href: "/user/dashboard/trades",
-    label: "Current Trades",
-    icon: ChartCandlestick,
-  },
-  {
-    href: "/user/dashboard/earnings",
-    label: "Earnings",
-    icon: BanknoteArrowDown,
-  },
+  // {
+  //   href: "/user/dashboard/earnings",
+  //   label: "Earnings",
+  //   icon: BanknoteArrowDown,
+  // },
   {
     href: "/user/dashboard/deposits",
     label: "Deposit History",
     icon: HistoryIcon,
-  },
-  {
-    href: "/user/dashboard/withdraw",
-    label: "Withdraw",
-    icon: BanknoteArrowUp,
-  },
-  {
-    href: "/user/dashboard/mailbox",
-    label: "Mailbox",
-    icon: MessageSquareText,
   },
   { href: "/user/dashboard/settings", label: "Account Settings", icon: Cog },
 ];
