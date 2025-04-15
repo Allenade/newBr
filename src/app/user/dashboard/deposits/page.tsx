@@ -7,7 +7,6 @@ import { Copy, Check } from "lucide-react";
 import { useToast } from "@/components/ui/use-toast";
 import Block, { BlockBody } from "@/components/templates/block";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useRouter } from "next/navigation";
 
 // You can change this Bitcoin address to your own
 const BITCOIN_ADDRESS = "11BLE7XYZJkCkmi8qWGBaRobJ6xAqact8U";
@@ -19,7 +18,6 @@ export default function DepositsPage() {
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
   const { toast } = useToast();
-  const router = useRouter();
 
   // Get the plan information from localStorage if available
   const [amount, setAmount] = useState("10000");

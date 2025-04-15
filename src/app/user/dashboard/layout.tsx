@@ -1,16 +1,9 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Loader2, Menu } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/hooks/auth/use-auth";
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from "@/components/ui/sidebar";
+import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import UserSidebar from "@/components/navigation/user-sidebar";
 import UserNavBar from "@/components/navigation/user-navbar";
 

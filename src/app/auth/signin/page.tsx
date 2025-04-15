@@ -20,7 +20,7 @@ import { Label } from "@/components/ui/label";
 import { useAuth } from "@/lib/hooks/auth/use-auth";
 import { Loader2, Mail } from "lucide-react";
 
-type ComponentProps = {};
+type ComponentProps = Record<string, never>;
 
 // ~ ======= create form schema  ======= ~
 const formSchema = z.object({

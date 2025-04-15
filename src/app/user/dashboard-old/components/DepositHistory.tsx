@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -47,12 +47,7 @@ export const DepositHistory = () => {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadPaymentMethods();
-    loadTransactions();
-  }, []);
-
-  const loadPaymentMethods = async () => {
+  const loadPaymentMethods = useCallback(async () => {
     try {
       const { data, error } = await supabase
         .from("payment_methods")
@@ -72,9 +67,9 @@ export const DepositHistory = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase, toast]);
 
-  const loadTransactions = async () => {
+  const loadTransactions = useCallback(async () => {
     try {
       const {
         data: { user },
@@ -97,7 +92,12 @@ export const DepositHistory = () => {
     } catch (error) {
       console.error("Error loading transactions:", error);
     }
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    loadPaymentMethods();
+    loadTransactions();
+  }, [loadPaymentMethods, loadTransactions]);
 
   const copyToClipboard = async (text: string, fieldName: string) => {
     try {
@@ -108,7 +108,7 @@ export const DepositHistory = () => {
         description: "Payment details copied to clipboard.",
       });
       setTimeout(() => setCopiedField(null), 2000);
-    } catch (error) {
+    } catch {
       toast({
         variant: "destructive",
         title: "Error",
@@ -217,7 +217,7 @@ export const DepositHistory = () => {
       }
 
       // Create the transaction
-      const { data: transactionData, error: transactionError } = await supabase
+      const { error: transactionError } = await supabase
         .from("transactions")
         .insert([
           {
@@ -556,7 +556,7 @@ export const DepositHistory = () => {
                       onChange={(e) => setProofOfPayment(e.target.value)}
                     />
                     <p className="text-xs text-muted-foreground mt-1">
-                      You can provide a transaction ID if you don't have a
+                      You can provide a transaction ID if you don&apos;t have a
                       screenshot
                     </p>
                   </div>
@@ -614,8 +614,8 @@ export const DepositHistory = () => {
                       transaction.status === "approved"
                         ? "bg-green-100 text-green-800"
                         : transaction.status === "declined"
-                        ? "bg-red-100 text-red-800"
-                        : "bg-yellow-100 text-yellow-800"
+                          ? "bg-red-100 text-red-800"
+                          : "bg-yellow-100 text-yellow-800"
                     }`}
                   >
                     {transaction.status.charAt(0).toUpperCase() +

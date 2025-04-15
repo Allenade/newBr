@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Coins } from "lucide-react";
 import { useUser } from "@/lib/hooks/user/use-user";
 
-type ComponentProps = {};
+type ComponentProps = Record<string, never>;
 
 const UserOverviewPage: FC<ComponentProps> = ({}) => {
   const { profile, profileIsLoading } = useUser();
@@ -35,10 +35,7 @@ const UserOverviewPage: FC<ComponentProps> = ({}) => {
               Available Balance
             </h3>
             <p className="text-2xl font-bold text-gray-900 dark:text-gray-50">
-              $
-              {profileIsLoading
-                ? "..."
-                : parseFloat(profile?.balance).toFixed(2)}{" "}
+              ${profileIsLoading ? "..." : (profile?.balance || 0).toFixed(2)}{" "}
               USD
             </p>
           </div>
@@ -48,10 +45,7 @@ const UserOverviewPage: FC<ComponentProps> = ({}) => {
               My Earnings
             </h3>
             <p className="text-2xl font-bold text-emerald-600 dark:text-emerald-500">
-              $
-              {profileIsLoading
-                ? "..."
-                : parseFloat(profile?.earnings).toFixed(2)}{" "}
+              ${profileIsLoading ? "..." : (profile?.earnings || 0).toFixed(2)}{" "}
               USD
             </p>
           </div>
@@ -61,9 +55,7 @@ const UserOverviewPage: FC<ComponentProps> = ({}) => {
               Bonus
             </h3>
             <p className="text-2xl font-bold text-blue-600 dark:text-blue-500">
-              $
-              {profileIsLoading ? "..." : parseFloat(profile?.bonus).toFixed(2)}{" "}
-              USD
+              ${profileIsLoading ? "..." : (profile?.bonus || 0).toFixed(2)} USD
             </p>
           </div>
 

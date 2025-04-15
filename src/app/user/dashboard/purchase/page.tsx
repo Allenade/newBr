@@ -15,10 +15,18 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { subscriptionPlans } from "@/services/db/schema/subscription-plans.schema";
 
 export default function PurchasePage() {
-  const { subscriptionPlans, subscriptionPlansIsLoading } =
+  const { subscriptionPlans: plans, subscriptionPlansIsLoading } =
     useSubscriptionPlan();
+  const router = useRouter();
+
+  const handlePlanSelect = (plan: typeof subscriptionPlans.$inferSelect) => {
+    localStorage.setItem("selectedPlan", JSON.stringify(plan));
+    router.push("/user/dashboard/deposits");
+  };
 
   if (subscriptionPlansIsLoading) {
     return (
@@ -47,7 +55,7 @@ export default function PurchasePage() {
           </p>
         </div>
 
-        {subscriptionPlans?.length === 0 ? (
+        {plans?.length === 0 ? (
           <div className="flex items-center justify-center gap-5 flex-col h-56 border border-dashed rounded-md p-4 w-full border-muted-foreground">
             <span className="text-muted-foreground p-1 bg-muted rounded-full">
               <NotepadTextDashed size={35} />
@@ -56,7 +64,7 @@ export default function PurchasePage() {
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {subscriptionPlans?.map((plan) => (
+            {plans?.map((plan) => (
               <Card
                 key={plan.id}
                 className="overflow-hidden border-border/40 transition-all hover:shadow-md group"
@@ -107,7 +115,12 @@ export default function PurchasePage() {
                     </div>
                   </div>
 
-                  <Button className="w-full mt-4">Purchase Plan</Button>
+                  <Button
+                    className="w-full mt-4"
+                    onClick={() => handlePlanSelect(plan)}
+                  >
+                    Purchase Plan
+                  </Button>
                 </CardContent>
               </Card>
             ))}

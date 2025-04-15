@@ -1,7 +1,6 @@
 "use client";
 
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useAuth } from "../auth/use-auth";
 import { profiles } from "@/services/db/schema/profiles.schema";
 import {
   updateProfileAction,
@@ -10,7 +9,6 @@ import {
 import { toast } from "sonner";
 
 export const useMutateUser = () => {
-  const { user } = useAuth();
   const queryClient = useQueryClient();
 
   // ~ ======= Update a user  -->

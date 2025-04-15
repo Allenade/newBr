@@ -5,7 +5,6 @@ import {
   Users,
   Wallet,
   Coins,
-  TrendingUp,
   Gift,
   DollarSign,
   ChevronsUpDown,
@@ -35,12 +34,13 @@ import { useMutateUser } from "@/lib/hooks/user/use-mutate-user";
 import { UserPermissions } from "@/lib/permissions/interfaces/permissions.dto";
 import { toast } from "sonner";
 import { userRoles } from "@/services/db/schema/profiles.schema";
+import { profiles as profileSchema } from "@/services/db/schema/profiles.schema";
 
-type ComponentProps = {};
+type ComponentProps = Record<string, never>;
 
 const AdminOverviewPage: React.FC<ComponentProps> = ({}) => {
   const { profiles, profilesIsLoading, userAbility } = useUser();
-  const { updateUser, isUpdating } = useMutateUser();
+  const { updateUser } = useMutateUser();
 
   // ~ ======= Update the user -->
   const handleUpdateUser = async (

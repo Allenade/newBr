@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -9,19 +8,10 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  User,
-  LogOut,
-  Menu,
-  X,
-  ChevronDown,
-  Globe,
-  ChevronRight,
-} from "lucide-react";
+import { User, LogOut, Menu, X, ChevronDown, ChevronRight } from "lucide-react";
 import { useSupabaseAuthStore } from "@/lib/store/useSupabaseAuthStore";
 
 // Check if we're in the preview environment

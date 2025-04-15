@@ -18,7 +18,6 @@ import { useUser } from "@/lib/hooks/user/use-user";
 import { usePathname } from "next/navigation";
 import {
   Cog,
-  Coins,
   LayoutDashboard,
   LogOut,
   LucideIcon,
@@ -31,7 +30,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-type ComponentProps = {};
+type ComponentProps = Record<string, never>;
 
 const AdminSidebar: React.FC<ComponentProps> = ({}) => {
   const { isLoadingUser, signOut } = useAuth();
@@ -151,7 +150,7 @@ export default AdminSidebar;
 // ~ ======= Sidebar menu links  ======= ~
 const sidebarLinks: { label: string; icon: LucideIcon; href: string }[] = [
   { href: "/admin/overview", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/admin/transactions", label: "Transactions", icon: Coins },
+  // { href: "/admin/transactions", label: "Transactions", icon: Coins },
   {
     href: "/admin/users",
     label: "Users",

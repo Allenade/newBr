@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
 import Block, { BlockBody } from "@/components/templates/block";
 import { Skeleton } from "@/components/ui/skeleton";
+import Image from "next/image";
 
 interface PaymentMethod {
   id: string;
@@ -201,7 +202,7 @@ export default function DepositsPage() {
         description: "Payment details copied to clipboard.",
       });
       setTimeout(() => setCopiedField(null), 2000);
-    } catch (error) {
+    } catch {
       toast({
         variant: "destructive",
         title: "Error",
@@ -310,7 +311,7 @@ export default function DepositsPage() {
       }
 
       // Create the transaction
-      const { data: transactionData, error: transactionError } = await supabase
+      const { error: transactionError } = await supabase
         .from("transactions")
         .insert([
           {
@@ -628,7 +629,7 @@ export default function DepositsPage() {
                           />
                           {imagePreview ? (
                             <div className="relative">
-                              <img
+                              <Image
                                 src={imagePreview}
                                 alt="Payment proof"
                                 className="mx-auto max-h-48 rounded-lg"
@@ -671,8 +672,8 @@ export default function DepositsPage() {
                           onChange={(e) => setProofOfPayment(e.target.value)}
                         />
                         <p className="text-xs text-muted-foreground mt-1">
-                          You can provide a transaction ID if you don't have a
-                          screenshot
+                          You can provide a transaction ID if you don&apos;t
+                          have a screenshot
                         </p>
                       </div>
                     </div>

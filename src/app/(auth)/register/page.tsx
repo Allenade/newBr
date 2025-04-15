@@ -1,216 +1,111 @@
 "use client";
 
-import { useState } from "react";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useUserStore } from "@/lib/store/userStore";
-import { createClient } from "@/services/db/supabase/client";
+import { useAuth } from "@/lib/hooks/auth/use-auth";
+import { useState } from "react";
+import { toast } from "sonner";
 
-const supabase = createClient();
+export default function RegisterPage(): React.JSX.Element {
+  const { signUpWithEmail, isSigningUp } = useAuth();
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
 
-export default function RegisterPage() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    const form = new FormData(e.currentTarget);
-    const name = form.get("name") as string;
-    const email = form.get("email") as string;
-    const password = form.get("password") as string;
-    const confirmPassword = form.get("confirmPassword") as string;
-
-    // Basic validation
-    if (!email || !password || !name) {
-      setError("All fields are required");
-      setIsLoading(false);
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords do not match");
       return;
     }
-
-    if (password !== confirmPassword) {
-      setError("Passwords do not match");
-      setIsLoading(false);
-      return;
-    }
-
-    if (password.length < 6) {
-      setError("Password must be at least 6 characters");
-      setIsLoading(false);
-      return;
-    }
-
-    try {
-      const { data, error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            name,
-          },
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
-      });
-
-      if (error) {
-        console.error("Signup error:", error);
-        setError(error.message);
-        setIsLoading(false);
-        return;
-      }
-
-      if (!data.user) {
-        setError("Registration failed. Please try again.");
-        setIsLoading(false);
-        return;
-      }
-
-      const user = data.user;
-
-      // Save user to Zustand
-      useUserStore.getState().setUser({
-        id: user.id,
-        email: user.email!,
-        name: name,
-        avatar_url: "",
-      });
-
-      // Create initial account entry in DB with correct column names
-      const { error: insertError } = await supabase.from("accounts").insert({
-        user_id: user.id,
-        balance: 0,
-        bonus: 0,
-        earnings: 0,
-        updated_at: new Date().toISOString(),
-      });
-
-      // Even if account creation has an error, still set up the user store
-      useUserStore.getState().setAccount({
-        balance: 0,
-        total_profit: 0,
-        bonus: 0,
-        trading_account: "",
-        earnings: 0,
-      });
-
-      // Redirect to dashboard regardless of account creation
-      router.push("/user/dashboard");
-    } catch (err) {
-      console.error("Unexpected error:", err);
-      setError("Something went wrong. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
+    signUpWithEmail({
+      email: formData.email,
+      password: formData.password,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+    });
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="flex min-h-screen items-center justify-center">
+      <div className="w-full max-w-md space-y-8 rounded-lg border p-6 shadow-lg">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900 dark:text-gray-100">
-            Create your account
-          </h2>
-          <p className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            Already have an account?{" "}
-            <Link
-              href="/login"
-              className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
-            >
-              Sign in
-            </Link>
+          <h1 className="text-2xl font-bold">Create an account</h1>
+          <p className="mt-2 text-sm text-gray-600">
+            Enter your details to get started
           </p>
         </div>
-        {error && (
-          <div className="bg-red-50 dark:bg-red-900/50 text-red-600 dark:text-red-300 p-4 rounded-md text-sm">
-            {error}
-          </div>
-        )}
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="space-y-4 rounded-md shadow-sm">
+        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+          <div className="space-y-4">
             <div>
-              <Label htmlFor="name">Full Name</Label>
+              <Label htmlFor="firstName">First Name</Label>
               <Input
-                id="name"
-                name="name"
+                id="firstName"
                 type="text"
-                autoComplete="name"
+                value={formData.firstName}
+                onChange={(e) =>
+                  setFormData({ ...formData, firstName: e.target.value })
+                }
                 required
-                className="mt-1"
-                placeholder="Enter your full name"
               />
             </div>
             <div>
-              <Label htmlFor="email">Email address</Label>
+              <Label htmlFor="lastName">Last Name</Label>
+              <Input
+                id="lastName"
+                type="text"
+                value={formData.lastName}
+                onChange={(e) =>
+                  setFormData({ ...formData, lastName: e.target.value })
+                }
+                required
+              />
+            </div>
+            <div>
+              <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
-                name="email"
                 type="email"
-                autoComplete="email"
+                value={formData.email}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 required
-                className="mt-1"
-                placeholder="Enter your email"
               />
             </div>
             <div>
               <Label htmlFor="password">Password</Label>
               <Input
                 id="password"
-                name="password"
                 type="password"
-                autoComplete="new-password"
+                value={formData.password}
+                onChange={(e) =>
+                  setFormData({ ...formData, password: e.target.value })
+                }
                 required
-                className="mt-1"
-                placeholder="Create a password"
               />
             </div>
             <div>
               <Label htmlFor="confirmPassword">Confirm Password</Label>
               <Input
                 id="confirmPassword"
-                name="confirmPassword"
                 type="password"
-                autoComplete="new-password"
+                value={formData.confirmPassword}
+                onChange={(e) =>
+                  setFormData({ ...formData, confirmPassword: e.target.value })
+                }
                 required
-                className="mt-1"
-                placeholder="Confirm your password"
               />
             </div>
           </div>
-
-          <div>
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                required
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <span className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                I agree to the{" "}
-                <Link
-                  href="/terms"
-                  className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
-                >
-                  Terms of Service
-                </Link>{" "}
-                and{" "}
-                <Link
-                  href="/privacy"
-                  className="font-medium text-blue-600 hover:text-blue-500 dark:text-blue-400 dark:hover:text-blue-300"
-                >
-                  Privacy Policy
-                </Link>
-              </span>
-            </label>
-          </div>
-
-          <Button type="submit" className="w-full" disabled={isLoading}>
-            {isLoading ? "Creating account..." : "Create account"}
+          <Button type="submit" className="w-full" disabled={isSigningUp}>
+            {isSigningUp ? "Creating account..." : "Create account"}
           </Button>
         </form>
       </div>

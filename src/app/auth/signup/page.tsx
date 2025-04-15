@@ -18,7 +18,7 @@ import Link from "next/link";
 import { useAuth } from "@/lib/hooks/auth/use-auth";
 import { Loader2, Mail } from "lucide-react";
 
-type ComponentProps = {};
+type ComponentProps = Record<string, never>;
 
 // ~ ======= create form schema  ======= ~
 const formSchema = z.object({

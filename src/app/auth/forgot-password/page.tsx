@@ -2,7 +2,7 @@
 
 import React, { FC } from "react";
 
-type ComponentProps = {};
+type ComponentProps = Record<string, never>;
 
 const ForgotPasswordPage: FC<ComponentProps> = ({}) => {
   return <div> New Component </div>;

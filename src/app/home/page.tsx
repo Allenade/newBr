@@ -20,12 +20,6 @@ import PriceTickerBar from "./component/PriceTickerBar";
 import { useCurrencyStore } from "@/lib/store/useCurrencyStore";
 import { motion } from "framer-motion";
 
-// Check if we're in the preview environment
-const isPreview =
-  typeof window !== "undefined" &&
-  (window.location.hostname.includes("vercel.app") ||
-    window.location.hostname === "localhost");
-
 export default function HomePage() {
   const { fetchExchangeRates } = useCurrencyStore();
 

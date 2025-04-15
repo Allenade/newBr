@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Block, { BlockBody } from "@/components/templates/block";
 import { useUser } from "@/lib/hooks/user/use-user";
 import { Button } from "@/components/ui/button";
-import { ChevronsUpDown, Plus, Check, Pencil } from "lucide-react";
+import { ChevronsUpDown, Plus, Check, Pencil, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -41,7 +41,7 @@ type ComponentProps = Record<string, never>;
 
 const AdminUsersPage: React.FC<ComponentProps> = () => {
   const { profiles, profilesIsLoading, userAbility } = useUser();
-  const { updateUser } = useMutateUser();
+  const { updateUser, deleteUser } = useMutateUser();
   const [showExtendedView, setShowExtendedView] = useState(false);
   const [editingProfile, setEditingProfile] = useState<
     typeof profileSchema.$inferSelect | null
@@ -70,6 +70,28 @@ const AdminUsersPage: React.FC<ComponentProps> = () => {
     }
 
     updateUser({ id, data: updateData });
+  };
+
+  // ~ ======= Delete the user -->
+  const handleDeleteUser = async (id: string) => {
+    if (
+      userAbility?.cannot(
+        UserPermissions.Actions.manage,
+        UserPermissions.Entities.admin_dashboard
+      )
+    ) {
+      return toast.error("Not Authorised", {
+        description: "You are not authorised to delete users",
+      });
+    }
+
+    if (
+      window.confirm(
+        "Are you sure you want to delete this user? This action cannot be undone."
+      )
+    ) {
+      deleteUser(id);
+    }
   };
 
   const handleEditClick = (profile: typeof profileSchema.$inferSelect) => {
@@ -259,113 +281,124 @@ const AdminUsersPage: React.FC<ComponentProps> = () => {
                           </TableCell>
                           <TableCell>{profile.tradingPoints || 0}</TableCell>
                           <TableCell>
-                            <Dialog>
-                              <DialogTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleEditClick(profile)}
-                                >
-                                  <Pencil size={14} strokeWidth={1.5} />
-                                </Button>
-                              </DialogTrigger>
-                              <DialogContent>
-                                <DialogHeader>
-                                  <DialogTitle>Edit Financial Data</DialogTitle>
-                                </DialogHeader>
-                                <div className="grid gap-4 py-4">
-                                  <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label
-                                      htmlFor="balance"
-                                      className="text-right"
-                                    >
-                                      Balance
-                                    </Label>
-                                    <Input
-                                      id="balance"
-                                      type="number"
-                                      value={editValues.balance}
-                                      onChange={(e) =>
-                                        setEditValues({
-                                          ...editValues,
-                                          balance:
-                                            parseFloat(e.target.value) || 0,
-                                        })
-                                      }
-                                      className="col-span-3"
-                                    />
-                                  </div>
-                                  <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label
-                                      htmlFor="earnings"
-                                      className="text-right"
-                                    >
-                                      Earnings
-                                    </Label>
-                                    <Input
-                                      id="earnings"
-                                      type="number"
-                                      value={editValues.earnings}
-                                      onChange={(e) =>
-                                        setEditValues({
-                                          ...editValues,
-                                          earnings:
-                                            parseFloat(e.target.value) || 0,
-                                        })
-                                      }
-                                      className="col-span-3"
-                                    />
-                                  </div>
-                                  <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label
-                                      htmlFor="bonus"
-                                      className="text-right"
-                                    >
-                                      Bonus
-                                    </Label>
-                                    <Input
-                                      id="bonus"
-                                      type="number"
-                                      value={editValues.bonus}
-                                      onChange={(e) =>
-                                        setEditValues({
-                                          ...editValues,
-                                          bonus:
-                                            parseFloat(e.target.value) || 0,
-                                        })
-                                      }
-                                      className="col-span-3"
-                                    />
-                                  </div>
-                                  <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label
-                                      htmlFor="tradingPoints"
-                                      className="text-right"
-                                    >
-                                      Trading Points
-                                    </Label>
-                                    <Input
-                                      id="tradingPoints"
-                                      type="number"
-                                      value={editValues.tradingPoints}
-                                      onChange={(e) =>
-                                        setEditValues({
-                                          ...editValues,
-                                          tradingPoints:
-                                            parseInt(e.target.value) || 0,
-                                        })
-                                      }
-                                      className="col-span-3"
-                                    />
-                                  </div>
-                                </div>
-                                <div className="flex justify-end">
-                                  <Button onClick={handleSaveEdit}>
-                                    Save Changes
+                            <div className="flex items-center gap-2">
+                              <Dialog>
+                                <DialogTrigger asChild>
+                                  <Button
+                                    variant="outline"
+                                    size="sm"
+                                    onClick={() => handleEditClick(profile)}
+                                  >
+                                    <Pencil size={14} strokeWidth={1.5} />
                                   </Button>
-                                </div>
-                              </DialogContent>
-                            </Dialog>
+                                </DialogTrigger>
+                                <DialogContent>
+                                  <DialogHeader>
+                                    <DialogTitle>
+                                      Edit User Financial Data
+                                    </DialogTitle>
+                                  </DialogHeader>
+                                  <div className="grid gap-4 py-4">
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                      <Label
+                                        htmlFor="balance"
+                                        className="text-right"
+                                      >
+                                        Balance
+                                      </Label>
+                                      <Input
+                                        id="balance"
+                                        type="number"
+                                        value={editValues.balance}
+                                        onChange={(e) =>
+                                          setEditValues({
+                                            ...editValues,
+                                            balance:
+                                              parseFloat(e.target.value) || 0,
+                                          })
+                                        }
+                                        className="col-span-3"
+                                      />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                      <Label
+                                        htmlFor="earnings"
+                                        className="text-right"
+                                      >
+                                        Earnings
+                                      </Label>
+                                      <Input
+                                        id="earnings"
+                                        type="number"
+                                        value={editValues.earnings}
+                                        onChange={(e) =>
+                                          setEditValues({
+                                            ...editValues,
+                                            earnings:
+                                              parseFloat(e.target.value) || 0,
+                                          })
+                                        }
+                                        className="col-span-3"
+                                      />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                      <Label
+                                        htmlFor="bonus"
+                                        className="text-right"
+                                      >
+                                        Bonus
+                                      </Label>
+                                      <Input
+                                        id="bonus"
+                                        type="number"
+                                        value={editValues.bonus}
+                                        onChange={(e) =>
+                                          setEditValues({
+                                            ...editValues,
+                                            bonus:
+                                              parseFloat(e.target.value) || 0,
+                                          })
+                                        }
+                                        className="col-span-3"
+                                      />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                      <Label
+                                        htmlFor="tradingPoints"
+                                        className="text-right"
+                                      >
+                                        Trading Points
+                                      </Label>
+                                      <Input
+                                        id="tradingPoints"
+                                        type="number"
+                                        value={editValues.tradingPoints}
+                                        onChange={(e) =>
+                                          setEditValues({
+                                            ...editValues,
+                                            tradingPoints:
+                                              parseInt(e.target.value) || 0,
+                                          })
+                                        }
+                                        className="col-span-3"
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="flex justify-end">
+                                    <Button onClick={handleSaveEdit}>
+                                      Save Changes
+                                    </Button>
+                                  </div>
+                                </DialogContent>
+                              </Dialog>
+                              <Button
+                                variant="destructive"
+                                size="sm"
+                                onClick={() => handleDeleteUser(profile.id)}
+                              >
+                                <Trash2 size={14} strokeWidth={1.5} />
+                              </Button>
+                            </div>
                           </TableCell>
                         </>
                       )}

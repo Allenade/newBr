@@ -114,7 +114,7 @@ export default function AboutPage() {
               </h2>
               <p className="text-gray-400 mb-12">
                 We operate on a foundation of core values that guide our
-                decisions and shape our platform's development.
+                decisions and shape our platform&apos;s development.
               </p>
               <div className="grid md:grid-cols-3 gap-8">
                 <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 p-6 rounded-xl border border-gray-700/50">
