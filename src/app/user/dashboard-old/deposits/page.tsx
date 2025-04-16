@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
@@ -60,12 +60,7 @@ export default function DepositsPage() {
   const [uploadingImage, setUploadingImage] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadPaymentMethods();
-    loadTransactions();
-  }, []);
-
-  const loadPaymentMethods = async () => {
+  const loadPaymentMethods = useCallback(async () => {
     try {
       const {
         data: { user },
@@ -108,10 +103,6 @@ export default function DepositsPage() {
         return;
       }
 
-      // Log the data to see what's being returned
-      console.log("Payment methods data:", data);
-
-      // Make sure we're properly handling the data structure
       const formattedData =
         data?.map((method) => ({
           ...method,
@@ -129,9 +120,9 @@ export default function DepositsPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [supabase, toast]);
 
-  const loadTransactions = async () => {
+  const loadTransactions = useCallback(async () => {
     try {
       const {
         data: { user },
@@ -179,9 +170,6 @@ export default function DepositsPage() {
         return;
       }
 
-      // Log the data to see what's being returned
-      console.log("Transactions data:", data);
-
       setTransactions(data || []);
     } catch (error) {
       console.error("Error loading transactions:", error);
@@ -191,7 +179,12 @@ export default function DepositsPage() {
         description: "An unexpected error occurred. Please try again.",
       });
     }
-  };
+  }, [supabase, toast]);
+
+  useEffect(() => {
+    loadPaymentMethods();
+    loadTransactions();
+  }, [loadPaymentMethods, loadTransactions]);
 
   const copyToClipboard = async (text: string, fieldName: string) => {
     try {
@@ -632,7 +625,9 @@ export default function DepositsPage() {
                               <Image
                                 src={imagePreview}
                                 alt="Payment proof"
-                                className="mx-auto max-h-48 rounded-lg"
+                                width={192}
+                                height={192}
+                                className="mx-auto max-h-48 rounded-lg object-contain"
                               />
                               <Button
                                 type="button"

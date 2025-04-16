@@ -2,8 +2,8 @@
 
 import React, { FC } from "react";
 import Block, { BlockBody } from "@/components/templates/block";
-import { Button } from "@/components/ui/button";
-import { Coins } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { Coins } from "lucide-react";
 import { useUser } from "@/lib/hooks/user/use-user";
 
 type ComponentProps = Record<string, never>;
@@ -19,11 +19,11 @@ const UserOverviewPage: FC<ComponentProps> = ({}) => {
         {/* ####################################### */}
         <div className="mb-2 flex items-center justify-between space-y-2">
           <h1 className="text-2xl font-bold tracking-tight">Overview</h1>
-          <div className="flex items-center space-x-2">
+          {/* <div className="flex items-center space-x-2">
             <Button>
               <Coins size={18} strokeWidth={1.5} className="mr-1" /> New Deposit
             </Button>
-          </div>
+          </div> */}
         </div>
 
         {/* ####################################### */}

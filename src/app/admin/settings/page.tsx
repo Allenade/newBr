@@ -4,20 +4,19 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 import { useUser } from "@/lib/hooks/user/use-user";
-import { useMutateUser } from "@/lib/hooks/user/use-mutate-user";
+// import { useMutateUser } from "@/lib/hooks/user/use-mutate-user";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Switch } from "@/components/ui/switch";
+// import { Switch } from "@/components/ui/switch";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { UserCog, Lock } from "lucide-react";
+import { UserCog, Lock, Loader2 } from "lucide-react";
 
 const SettingsPage = () => {
   const { profile, profileIsLoading } = useUser();
-  const { updateUser } = useMutateUser();
-  const { toast } = useToast();
+  // const { updateUser } = useMutateUser();
   const supabase = createClientComponentClient({
     supabaseUrl: process.env.NEXT_PUBLIC_PROJECT_URL,
     supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
@@ -28,8 +27,8 @@ const SettingsPage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const [notificationsEnabled, setNotificationsEnabled] = useState(true);
-  const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
+  // const [notificationsEnabled, setNotificationsEnabled] = useState(true);
+  // const [twoFactorEnabled, setTwoFactorEnabled] = useState(false);
 
   const handlePasswordChange = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,33 +36,41 @@ const SettingsPage = () => {
 
     try {
       if (newPassword !== confirmPassword) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "New passwords do not match",
-        });
+        toast.error("New passwords do not match");
         return;
       }
 
       if (newPassword.length < 6) {
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Password must be at least 6 characters",
-        });
+        toast.error("Password must be at least 6 characters");
         return;
       }
 
+      if (!profile?.email) {
+        toast.error("User email not found");
+        return;
+      }
+
+      // First verify the current password
+      const { error: signInError } = await supabase.auth.signInWithPassword({
+        email: profile.email,
+        password: currentPassword,
+      });
+
+      if (signInError) {
+        toast.error("Current password is incorrect");
+        return;
+      }
+
+      // If current password is correct, update to new password
       const { error } = await supabase.auth.updateUser({
         password: newPassword,
       });
 
-      if (error) throw error;
+      if (error) {
+        throw error;
+      }
 
-      toast({
-        title: "Success",
-        description: "Password updated successfully",
-      });
+      toast.success("Password updated successfully");
 
       // Reset form
       setCurrentPassword("");
@@ -71,41 +78,32 @@ const SettingsPage = () => {
       setConfirmPassword("");
     } catch (error) {
       console.error("Error changing password:", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update password. Please try again.",
-      });
+      toast.error("Failed to update password. Please try again.");
     } finally {
       setIsChangingPassword(false);
     }
   };
 
-  const handleNotificationToggle = async () => {
-    if (!profile) return;
+  // const handleNotificationToggle = async () => {
+  //   if (!profile) return;
 
-    try {
-      await updateUser({
-        id: profile.id,
-        data: {
-          isActive: !notificationsEnabled,
-        },
-      });
+  //   try {
+  //     await updateUser({
+  //       id: profile.id,
+  //       data: {
+  //         isActive: !notificationsEnabled,
+  //       },
+  //     });
 
-      setNotificationsEnabled(!notificationsEnabled);
-      toast({
-        title: "Success",
-        description: `Notifications ${!notificationsEnabled ? "enabled" : "disabled"}`,
-      });
-    } catch (error) {
-      console.error("Error updating notification settings:", error);
-      toast({
-        variant: "destructive",
-        title: "Error",
-        description: "Failed to update notification settings",
-      });
-    }
-  };
+  //     setNotificationsEnabled(!notificationsEnabled);
+  //     toast.success(
+  //       `Notifications ${!notificationsEnabled ? "enabled" : "disabled"}`
+  //     );
+  //   } catch (error) {
+  //     console.error("Error updating notification settings:", error);
+  //     toast.error("Failed to update notification settings");
+  //   }
+  // };
 
   if (profileIsLoading) {
     return (
@@ -154,7 +152,7 @@ const SettingsPage = () => {
 
             <Separator className="my-4" />
 
-            <div className="space-y-4">
+            {/* <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
                   <Label>Email Notifications</Label>
@@ -180,7 +178,7 @@ const SettingsPage = () => {
                   onCheckedChange={setTwoFactorEnabled}
                 />
               </div>
-            </div>
+            </div> */}
           </CardContent>
         </Card>
 
@@ -201,6 +199,7 @@ const SettingsPage = () => {
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   placeholder="Enter your current password"
+                  required
                 />
               </div>
 
@@ -212,6 +211,7 @@ const SettingsPage = () => {
                   value={newPassword}
                   onChange={(e) => setNewPassword(e.target.value)}
                   placeholder="Enter your new password"
+                  required
                 />
               </div>
 
@@ -223,6 +223,7 @@ const SettingsPage = () => {
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
                   placeholder="Confirm your new password"
+                  required
                 />
               </div>
 
@@ -231,7 +232,14 @@ const SettingsPage = () => {
                 className="w-full"
                 disabled={isChangingPassword}
               >
-                {isChangingPassword ? "Updating..." : "Update Password"}
+                {isChangingPassword ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  "Update Password"
+                )}
               </Button>
             </form>
           </CardContent>

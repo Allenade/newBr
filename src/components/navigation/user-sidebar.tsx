@@ -15,7 +15,6 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
-  BanknoteArrowDown,
   Cog,
   HistoryIcon,
   LayoutDashboard,
@@ -31,6 +30,7 @@ import { useUser } from "@/lib/hooks/user/use-user";
 import { useAuth } from "@/lib/hooks/auth/use-auth";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type ComponentProps = Record<string, never>;
 
@@ -95,6 +95,9 @@ const UserSidebar: FC<ComponentProps> = ({}) => {
                 </div>
               </div>
             )}
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <ThemeToggle />
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>

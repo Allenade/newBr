@@ -1,22 +1,22 @@
-export namespace UserPermissions {
-  export enum Roles {
-    admin = "admin",
-    user = "user",
-  }
+export const UserPermissions = {
+  Roles: {
+    admin: "admin",
+    user: "user",
+  } as const,
 
-  export enum Entities {
-    admin_dashboard = "admin-dashboard",
-    user_dashboard = "user-dashboard",
-    trades = "trades",
-    settings = "settings",
-    users = "users",
-  }
+  Entities: {
+    admin_dashboard: "admin-dashboard",
+    user_dashboard: "user-dashboard",
+    trades: "trades",
+    settings: "settings",
+    users: "users",
+  } as const,
 
-  export enum Actions {
-    view = "view",
-    create = "create",
-    update = "update",
-    delete = "delete",
-    manage = "manage",
-  }
-}
+  Actions: {
+    view: "view",
+    create: "create",
+    update: "update",
+    delete: "delete",
+    manage: "manage",
+  } as const,
+} as const;

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Block, { BlockBody } from "@/components/templates/block";
 import { useUser } from "@/lib/hooks/user/use-user";
 import { Button } from "@/components/ui/button";
-import { ChevronsUpDown, Plus, Check, Pencil, Trash2 } from "lucide-react";
+import { ChevronsUpDown, Check, Pencil, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -135,9 +135,6 @@ const AdminUsersPage: React.FC<ComponentProps> = () => {
               />
               <Label htmlFor="extended-view">Extended View</Label>
             </div>
-            <Button>
-              <Plus size={18} strokeWidth={1.5} className="mr-1" /> Add User
-            </Button>
           </div>
         </div>
 

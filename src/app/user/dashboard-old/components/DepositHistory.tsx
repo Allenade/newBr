@@ -10,6 +10,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 interface PaymentMethod {
   id: string;
@@ -513,10 +514,12 @@ export const DepositHistory = () => {
                       />
                       {imagePreview ? (
                         <div className="relative">
-                          <img
+                          <Image
                             src={imagePreview}
                             alt="Payment proof"
-                            className="mx-auto max-h-48 rounded-lg"
+                            width={192}
+                            height={192}
+                            className="mx-auto max-h-48 rounded-lg object-contain"
                           />
                           <Button
                             type="button"

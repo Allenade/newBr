@@ -1,5 +1,5 @@
 export namespace TryCatch {
-  export type Success<T = any> = {
+  export type Success<T = unknown> = {
     data: T;
     error: null;
   };

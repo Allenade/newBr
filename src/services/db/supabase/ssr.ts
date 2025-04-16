@@ -5,19 +5,19 @@ import { createServerClient } from "@supabase/ssr";
 // I would consider this over-engineering but there might be a reason to add more
 // methods to this in the future.
 class Supabase {
-  private readonly url: string | undefined;
-  private readonly key: string | undefined;
+  private readonly url: string;
+  private readonly key: string;
 
   constructor() {
     // ~ ======= assign values -->
-    this.url = process.env.NEXT_PUBLIC_PROJECT_URL;
-    this.key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    this.url =
+      process.env.NEXT_PUBLIC_SUPABASE_URL ||
+      "https://your-project.supabase.co";
+    this.key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "your-anon-key";
   }
 
   // ~ ======= server client -->
   async ssr_client() {
-    if (!this.key || !this.url)
-      throw new Error("Supabase env variables missing or not set correctly");
     const cookie_store = await cookies();
     return createServerClient(this.url, this.key, {
       cookies: {

@@ -54,7 +54,7 @@ export const usePriceTickerStore = create<PriceTickerState>((set) => ({
       ];
 
       set({ prices: newPrices, loading: false });
-    } catch (error) {
+    } catch {
       set({ loading: false, error: "Failed to fetch price data" });
     }
   },

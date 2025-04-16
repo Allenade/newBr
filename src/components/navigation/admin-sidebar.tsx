@@ -29,6 +29,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 type ComponentProps = Record<string, never>;
 
@@ -94,6 +95,9 @@ const AdminSidebar: React.FC<ComponentProps> = ({}) => {
               </div>
             )}
           </SidebarMenuItem>
+          <SidebarMenuItem>
+            <ThemeToggle />
+          </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
 
@@ -140,7 +144,9 @@ const AdminSidebar: React.FC<ComponentProps> = ({}) => {
       {/* ~ =================================== ~ */}
       {/* -- Footer */}
       {/* ~ =================================== ~ */}
-      <SidebarFooter></SidebarFooter>
+      <SidebarFooter>
+        <SidebarMenu></SidebarMenu>
+      </SidebarFooter>
     </Sidebar>
   );
 };

@@ -11,6 +11,7 @@ if (!databaseUrl) {
 // const index = drizzle(client);
 
 declare global {
+  // eslint-disable-next-line no-var
   var _db: PostgresJsDatabase | undefined;
 }
 
