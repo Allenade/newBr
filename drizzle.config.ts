@@ -1,17 +1,13 @@
-import { defineConfig } from "drizzle-kit";
+import type { Config } from "drizzle-kit";
+import * as dotenv from "dotenv";
 
-const databaseUrl = process.env.DATABASE_URL;
-if (!databaseUrl) {
-  throw new Error("Failed to get database URL. Check env variables.");
-}
+dotenv.config();
 
-export default defineConfig({
+export default {
   schema: "./src/services/db/schema/*",
+  out: "./drizzle",
   dialect: "postgresql",
-  out: "./src/services/db/migrations",
   dbCredentials: {
-    url: databaseUrl,
+    url: process.env.DATABASE_URL!,
   },
-  verbose: false,
-  strict: true,
-});
+} satisfies Config;

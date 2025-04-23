@@ -24,6 +24,7 @@ import {
   NotepadTextDashed,
   User,
   Users,
+  Coins,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -156,7 +157,9 @@ export default AdminSidebar;
 // ~ ======= Sidebar menu links  ======= ~
 const sidebarLinks: { label: string; icon: LucideIcon; href: string }[] = [
   { href: "/admin/overview", label: "Dashboard", icon: LayoutDashboard },
-  // { href: "/admin/transactions", label: "Transactions", icon: Coins },
+  // { href: "/admin/deposits", label: "Deposits", icon: Coins },
+  { href: "/admin/transactions", label: "Transactions", icon: Coins },
+  // { href: "/admin/trades", label: "Trade History", icon: History },
   {
     href: "/admin/users",
     label: "Users",
@@ -167,10 +170,5 @@ const sidebarLinks: { label: string; icon: LucideIcon; href: string }[] = [
     label: "Plans",
     icon: NotepadTextDashed,
   },
-  // {
-  // 	href: "/admin/mailbox",
-  // 	label: "Mailbox",
-  // 	icon: MessageSquareText,
-  // },
   { href: "/admin/settings", label: "Account Settings", icon: Cog },
 ];

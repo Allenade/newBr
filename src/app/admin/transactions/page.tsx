@@ -18,6 +18,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
+import { useUser } from "@/lib/hooks/user/use-user";
 
 type PaymentMethod = {
   id: string;
@@ -36,7 +37,7 @@ type PaymentMethod = {
 
 const TransactionsPage = () => {
   const [paymentMethods, setPaymentMethods] = useState<PaymentMethod[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [isLoadingPaymentMethods, setIsLoadingPaymentMethods] = useState(true);
   const [editingMethod, setEditingMethod] = useState<PaymentMethod | null>(
     null
   );
@@ -46,10 +47,18 @@ const TransactionsPage = () => {
     supabaseKey: process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
   });
 
+  const { profilesIsLoading, profile } = useUser();
+
+  useEffect(() => {
+    // Debug log to check profile data
+    console.log("Current user profile:", profile);
+  }, [profile]);
+
   // Form states
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [enabled, setEnabled] = useState(true);
+  const [formError, setFormError] = useState<string | null>(null);
 
   // Crypto specific
   const [address, setAddress] = useState("");
@@ -77,7 +86,7 @@ const TransactionsPage = () => {
         description: "Failed to load payment methods",
       });
     } finally {
-      setLoading(false);
+      setIsLoadingPaymentMethods(false);
     }
   }, [supabase, toast]);
 
@@ -99,18 +108,50 @@ const TransactionsPage = () => {
 
   const handleSubmit = async (type: "CRYPTO" | "BANK") => {
     try {
-      if (!name) {
-        throw new Error("Name is required");
+      setFormError(null);
+
+      // Validate required fields
+      if (!name || name.trim() === "") {
+        setFormError("Name is required");
+        return;
+      }
+
+      if (type === "CRYPTO") {
+        if (!address || address.trim() === "") {
+          setFormError("Wallet address is required");
+          return;
+        }
+        if (!network || network.trim() === "") {
+          setFormError("Network is required");
+          return;
+        }
+      } else {
+        if (!bankName || bankName.trim() === "") {
+          setFormError("Bank name is required");
+          return;
+        }
+        if (!accountName || accountName.trim() === "") {
+          setFormError("Account name is required");
+          return;
+        }
+        if (!accountNumber || accountNumber.trim() === "") {
+          setFormError("Account number is required");
+          return;
+        }
       }
 
       const details =
         type === "CRYPTO"
-          ? { address, network }
-          : { bankName, accountName, accountNumber };
+          ? { address: address.trim(), network: network.trim() }
+          : {
+              bankName: bankName.trim(),
+              accountName: accountName.trim(),
+              accountNumber: accountNumber.trim(),
+            };
 
       const methodData = {
-        name,
-        description: description || null,
+        name: name.trim(),
+        description: description?.trim() || null,
         type,
         enabled,
         details,
@@ -193,7 +234,8 @@ const TransactionsPage = () => {
     }
   };
 
-  if (loading) {
+  // Show loading state while either profiles or payment methods are loading
+  if (profilesIsLoading || isLoadingPaymentMethods) {
     return (
       <div className="flex items-center justify-center h-[200px]">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-gray-100"></div>
@@ -204,7 +246,7 @@ const TransactionsPage = () => {
   return (
     <div className="space-y-6 p-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-bold">Payment Methods</h1>
+        <h1 className="text-2xl font-bold">Transactions</h1>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -214,13 +256,20 @@ const TransactionsPage = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
+              {formError && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                  {formError}
+                </div>
+              )}
+
               <div className="space-y-2">
-                <Label htmlFor="name">Name</Label>
+                <Label htmlFor="name">Name *</Label>
                 <Input
                   id="name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="e.g., Bitcoin, Bank of America"
+                  required
                 />
               </div>
 

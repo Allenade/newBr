@@ -17,15 +17,55 @@ import { Badge } from "@/components/ui/badge";
 import { Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { subscriptionPlans } from "@/services/db/schema/subscription-plans.schema";
+import { createTransactionAction } from "@/services/actions/transactions/transactions.actions";
+import { useUser } from "@/lib/hooks/user/use-user";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function PurchasePage() {
   const { subscriptionPlans: plans, subscriptionPlansIsLoading } =
     useSubscriptionPlan();
+  const { profile } = useUser();
   const router = useRouter();
+  const { toast } = useToast();
 
-  const handlePlanSelect = (plan: typeof subscriptionPlans.$inferSelect) => {
-    localStorage.setItem("selectedPlan", JSON.stringify(plan));
-    router.push("/user/dashboard/deposits");
+  const handlePlanSelect = async (
+    plan: typeof subscriptionPlans.$inferSelect
+  ) => {
+    try {
+      if (!profile) {
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Please login to purchase a plan",
+        });
+        return;
+      }
+
+      // Create transaction
+      await createTransactionAction({
+        profileId: profile.id,
+        subscriptionPlanId: plan.id,
+        amount: plan.price?.toString() || "0",
+      });
+
+      // Store plan in localStorage
+      localStorage.setItem("selectedPlan", JSON.stringify(plan));
+
+      toast({
+        title: "Success",
+        description:
+          "Plan selected successfully. Please proceed to make payment.",
+      });
+
+      router.push("/user/dashboard/deposits");
+    } catch (error) {
+      console.error("Error selecting plan:", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Failed to select plan. Please try again.",
+      });
+    }
   };
 
   if (subscriptionPlansIsLoading) {

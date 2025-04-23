@@ -1,0 +1,5 @@
+ALTER TABLE "profiles" ALTER COLUMN "image_url" SET DEFAULT 'https://api.dicebear.com/7.x/shapes/svg?seed=q8fh5sa9nu';--> statement-breakpoint
+DROP POLICY "Enable read access for users based on role" ON "user_transaction_totals" CASCADE;--> statement-breakpoint
+DROP POLICY "Enable update for admins only" ON "user_transaction_totals" CASCADE;--> statement-breakpoint
+CREATE POLICY "Enable read access for all users" ON "user_transaction_totals" AS PERMISSIVE FOR SELECT TO public USING (true);--> statement-breakpoint
+CREATE POLICY "Enable update for users based on email" ON "user_transaction_totals" AS PERMISSIVE FOR UPDATE TO "authenticated" USING ((auth.jwt() ->> "email")::text = (SELECT email FROM profiles WHERE id = user_id)) WITH CHECK ((auth.jwt() ->> 'email')::text = (SELECT email FROM profiles WHERE id = user_id));

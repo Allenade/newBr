@@ -3,6 +3,7 @@ import postgres from "postgres";
 
 // ~ ======= schema imports  -->
 const databaseUrl = process.env.DATABASE_URL;
+console.log("databaseUrl", databaseUrl);
 
 if (!databaseUrl) {
   throw new Error("Failed to get database URL. Check env variables.");

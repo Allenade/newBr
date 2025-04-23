@@ -14,7 +14,7 @@ import { UserPermissions } from "@/lib/permissions/interfaces/permissions.dto";
 export const useUser = () => {
   const { user } = useAuth();
   const [userAbility, setUserAbility] = useState<MongoAbility>(
-    defineAbility(UserPermissions.Roles.user)
+    defineAbility(UserPermissions.Roles.admin)
   );
 
   const {

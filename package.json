@@ -7,7 +7,9 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:generate": "drizzle-kit generate:pg",
+    "db:push": "drizzle-kit push:pg"
   },
   "dependencies": {
     "@casl/ability": "^6.7.3",
@@ -33,11 +35,13 @@
     "@supabase/supabase-js": "^2.49.4",
     "@tanstack/react-query": "^5.72.2",
     "@tanstack/react-query-devtools": "^5.72.2",
+    "axios": "^1.8.4",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "drizzle-orm": "^0.41.0",
     "framer-motion": "^12.7.2",
+    "lightweight-charts": "^3.8.0",
     "lucide-react": "^0.487.0",
     "next": "15.2.4",
     "next-themes": "^0.4.6",
@@ -54,11 +58,14 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.3.0",
     "@types/jest": "^29.5.14",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "dotenv": "^16.4.7",
+    "dotenv-cli": "^8.0.0",
     "drizzle-kit": "^0.30.6",
     "eslint": "^9",
     "eslint-config-next": "15.2.4",
@@ -66,6 +73,7 @@
     "prettier": "^3.5.3",
     "tailwindcss": "^4",
     "ts-jest": "^29.3.1",
-    "typescript": "^5"
+    "typescript": "^5",
+    "vitest": "^3.1.2"
   }
 }

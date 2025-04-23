@@ -4,12 +4,15 @@ import React, { FC } from "react";
 import Block, { BlockBody } from "@/components/templates/block";
 // import { Button } from "@/components/ui/button";
 // import { Coins } from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useUser } from "@/lib/hooks/user/use-user";
+import { Wallet, History, Receipt } from "lucide-react";
 
 type ComponentProps = Record<string, never>;
 
 const UserOverviewPage: FC<ComponentProps> = ({}) => {
   const { profile, profileIsLoading } = useUser();
+  const router = useRouter();
 
   return (
     <Block>
@@ -66,6 +69,47 @@ const UserOverviewPage: FC<ComponentProps> = ({}) => {
             <p className="text-2xl font-bold text-purple-600 dark:text-purple-500">
               {profileIsLoading ? "..." : profile?.tradingPoints}
             </p>
+          </div>
+        </div>
+
+        {/* ####################################### */}
+        {/* -- History Sections --> */}
+        {/* ####################################### */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-5">
+          <div
+            className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm p-6 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            onClick={() => router.push("/user/dashboard/total-deposits")}
+          >
+            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+              Total Deposits
+            </h3>
+            <div className="flex items-center justify-center h-12">
+              <Wallet className="h-8 w-8 text-gray-500 dark:text-gray-400" />
+            </div>
+          </div>
+
+          <div
+            className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm p-6 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            onClick={() => router.push("/user/dashboard/trades")}
+          >
+            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+              Trades
+            </h3>
+            <div className="flex items-center justify-center h-12">
+              <History className="h-8 w-8 text-gray-500 dark:text-gray-400" />
+            </div>
+          </div>
+
+          <div
+            className="bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm p-6 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            onClick={() => router.push("/user/dashboard/deposits")}
+          >
+            <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+              Transactions
+            </h3>
+            <div className="flex items-center justify-center h-12">
+              <Receipt className="h-8 w-8 text-gray-500 dark:text-gray-400" />
+            </div>
           </div>
         </div>
 

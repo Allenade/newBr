@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
+import { CookieOptions } from "@supabase/ssr";
 
 // ~ ======= create client -->
 // I would consider this over-engineering but there might be a reason to add more
@@ -9,20 +10,17 @@ class Supabase {
   private readonly key: string;
 
   constructor() {
-    // ~ ======= assign values -->
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
     if (!supabaseUrl || !supabaseAnonKey) {
-      console.error("Missing Supabase environment variables");
-      // Use fallback values in production
-      this.url = "https://qmwqamuywtjheyqpglg.supabase.co";
-      this.key =
-        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFtd2dxYW11eXd0amhleXFwZ2xnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4Njg4MjUsImV4cCI6MjA1OTQ0NDgyNX0.viXmNysJLewatBvRasKz4LV2VdYNtq6qi4B1h0cRGNg";
-    } else {
-      this.url = supabaseUrl;
-      this.key = supabaseAnonKey;
+      throw new Error(
+        "Missing Supabase environment variables. Please check your .env.local file."
+      );
     }
+
+    this.url = supabaseUrl;
+    this.key = supabaseAnonKey;
   }
 
   // ~ ======= server client -->
@@ -30,15 +28,22 @@ class Supabase {
     const cookie_store = await cookies();
     return createServerClient(this.url, this.key, {
       cookies: {
-        getAll() {
-          return cookie_store.getAll();
+        get(name: string) {
+          return cookie_store.get(name)?.value;
         },
-        setAll(cookies_to_set) {
+        set(name: string, value: string, options: CookieOptions) {
           try {
-            cookies_to_set.forEach(({ name, value, options }) =>
-              cookie_store.set(name, value, options)
-            );
-          } catch {}
+            cookie_store.set(name, value, options);
+          } catch (error) {
+            console.error("Error setting cookie:", error);
+          }
+        },
+        remove(name: string, options: CookieOptions) {
+          try {
+            cookie_store.set(name, "", { ...options, maxAge: 0 });
+          } catch (error) {
+            console.error("Error removing cookie:", error);
+          }
         },
       },
     });

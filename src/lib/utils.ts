@@ -19,6 +19,18 @@ export async function getSingle<T>(query: Promise<T[]>): Promise<T | null> {
 }
 
 /**
+ * Retrieves all results from a query that returns an array of results.
+ * If the array is empty, it returns an empty array.
+ *
+ * @template T - The type of the items in the array.
+ * @param {Promise<T[]>} query - A promise that resolves to an array of items.
+ * @returns {Promise<T[]>} - A promise that resolves to the array of items.
+ */
+export async function getMany<T>(query: Promise<T[]>): Promise<T[]> {
+  return await query;
+}
+
+/**
  * Generates a random DiceBear URL for group icons with a random seed.
  * @returns {string} A URL string for a DiceBear icon with a random seed.
  */
@@ -59,4 +71,11 @@ export const handleError = (error: unknown, customMessage?: string) => {
   // ~ ======= default ======= ~
   console.log(error);
   throw new Error("An unknown error occurred.");
+};
+
+export const formatCurrency = (amount: number): string => {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(amount);
 };
