@@ -20,7 +20,7 @@ export default function AboutPage() {
               className="max-w-3xl mx-auto text-center"
             >
               <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#FFCC00] to-white">
-                About Aspen Marketpip
+                Vaultixes{" "}
               </h1>
               <p className="text-gray-400 text-lg">
                 We are a leading cryptocurrency trading platform dedicated to

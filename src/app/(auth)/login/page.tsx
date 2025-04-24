@@ -11,9 +11,6 @@ import { createClient } from "@/services/db/supabase/client";
 
 const supabase = createClient();
 
-// Admin credentials
-const ADMIN_EMAIL = "allenumunade@gmail.com";
-
 export default function LoginPage() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -42,8 +39,14 @@ export default function LoginPage() {
       }
 
       // Check if this is the admin email
-      if (email === ADMIN_EMAIL) {
-        router.push("/admin/dashboard");
+      if (email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+        // Update user role to admin
+        await supabase
+          .from("profiles")
+          .update({ role: "admin" })
+          .eq("email", email);
+
+        router.push("/admin/overview");
         return;
       }
 

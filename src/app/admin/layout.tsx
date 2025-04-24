@@ -12,57 +12,57 @@ import AdminSidebar from "@/components/navigation/admin-sidebar";
 import { useUser } from "@/lib/hooks/user/use-user";
 
 type ComponentProps = {
-	children: React.ReactNode;
+  children: React.ReactNode;
 };
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-expect-error
 const AdminDashboardLayout: React.FC<ComponentProps> = ({ children }) => {
-	const router = useRouter();
-	const { user, isLoadingUser } = useAuth();
-	const { userAbility } = useUser();
+  const router = useRouter();
+  const { user, isLoadingUser } = useAuth();
+  const { userAbility } = useUser();
 
-	// ~ ======= Loading state ======= ~
-	if (isLoadingUser) {
-		return (
-			<div className="w-full h-[100dvh] flex items-center justify-center gap-3">
-				<Loader2 size={20} className="animate-spin" />
-				<p>Loading...</p>
-			</div>
-		);
-	}
+  // ~ ======= Loading state ======= ~
+  if (isLoadingUser) {
+    return (
+      <div className="w-full h-[100dvh] flex items-center justify-center gap-3">
+        <Loader2 size={20} className="animate-spin" />
+        <p>Loading...</p>
+      </div>
+    );
+  }
 
-	// ~ ======= There is no user  ======= ~
-	if (!user && !isLoadingUser) {
-		router.push("/auth/signin");
-		return null;
-	}
+  // ~ ======= There is no user  ======= ~
+  if (!user && !isLoadingUser) {
+    router.push("/auth/signin");
+    return null;
+  }
 
-	// ~ ======= Check that the user has admin access -->
-	if (
-		userAbility?.cannot(
-			UserPermissions.Actions.view,
-			UserPermissions.Entities.admin_dashboard
-		)
-	) {
-		if (user?.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
-			// ~ ======= Redirect to user dashboard -->
-			toast.error("You do not have access to this page");
-			return router.replace("/user/dashboard/overview");
-		}
-	}
+  // ~ ======= Check that the user has admin access -->
+  if (
+    userAbility?.cannot(
+      UserPermissions.Actions.view,
+      UserPermissions.Entities.admin_dashboard
+    )
+  ) {
+    if (user?.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
+      // ~ ======= Redirect to user dashboard -->
+      toast.error("You do not have access to this page");
+      return router.replace("/user/dashboard/overview");
+    }
+  }
 
-	return (
-		<SidebarProvider>
-			<AdminSidebar />
-			<SidebarInset className="overflow-hidden backdrop-blur-[2px]">
-				<main className="bg-background w-full h-full overflow-hidden">
-					<UserNavBar />
-					{children}
-				</main>
-			</SidebarInset>
-		</SidebarProvider>
-	);
+  return (
+    <SidebarProvider>
+      <AdminSidebar />
+      <SidebarInset className="overflow-hidden backdrop-blur-[2px]">
+        <main className="bg-background w-full h-full overflow-hidden">
+          <UserNavBar />
+          {children}
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
+  );
 };
 
 export default AdminDashboardLayout;

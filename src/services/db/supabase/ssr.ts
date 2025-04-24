@@ -26,23 +26,37 @@ class Supabase {
   // ~ ======= server client -->
   async ssr_client() {
     const cookie_store = await cookies();
+
+    if (!cookie_store) {
+      console.error("[Supabase] Failed to get cookie store");
+      throw new Error("Failed to get cookie store");
+    }
+
     return createServerClient(this.url, this.key, {
       cookies: {
         get(name: string) {
-          return cookie_store.get(name)?.value;
+          const cookie = cookie_store.get(name);
+          if (!cookie?.value) {
+            console.log(`[Supabase] Cookie not found: ${name}`);
+          }
+          return cookie?.value;
         },
         set(name: string, value: string, options: CookieOptions) {
           try {
             cookie_store.set(name, value, options);
+            console.log(`[Supabase] Cookie set: ${name}`);
           } catch (error) {
-            console.error("Error setting cookie:", error);
+            console.error("[Supabase] Error setting cookie:", error);
+            throw error;
           }
         },
         remove(name: string, options: CookieOptions) {
           try {
             cookie_store.set(name, "", { ...options, maxAge: 0 });
+            console.log(`[Supabase] Cookie removed: ${name}`);
           } catch (error) {
-            console.error("Error removing cookie:", error);
+            console.error("[Supabase] Error removing cookie:", error);
+            throw error;
           }
         },
       },

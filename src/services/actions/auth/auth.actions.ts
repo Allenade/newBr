@@ -13,6 +13,8 @@ export const signUpWithEmailAndPassword = async (
   profileData: AuthActions.SignUpProps
 ) => {
   const { email, password } = profileData;
+  console.log("[Auth] Attempting to sign up user:", email);
+
   const client = await new Supabase().ssr_client();
 
   // ~ ======= Create user account ======= ~
@@ -21,14 +23,26 @@ export const signUpWithEmailAndPassword = async (
     password,
   });
 
-  handleError(signUpError);
+  if (signUpError) {
+    console.error("[Auth] Sign up error:", signUpError);
+    handleError(signUpError);
+  }
 
   // ~ ======= Create profile if account has been created ======= ~
   if (user) {
-    return await createProfileAction({
-      id: user.user?.id,
-      ...profileData,
-    });
+    console.log("[Auth] User account created successfully:", user.user?.id);
+    try {
+      const profile = await createProfileAction({
+        id: user.user?.id,
+        ...profileData,
+        role: email === process.env.NEXT_PUBLIC_ADMIN_EMAIL ? "admin" : "user",
+      });
+      console.log("[Auth] Profile created successfully:", profile);
+      return profile;
+    } catch (error) {
+      console.error("[Auth] Failed to create profile:", error);
+      throw error;
+    }
   }
 
   return null;
@@ -41,6 +55,8 @@ export const signInUserWithEmailPassword = async (
   signInData: AuthActions.SignInProps
 ) => {
   const { email, password } = signInData;
+  console.log("[Auth] Attempting to sign in user:", email);
+
   const client = await new Supabase().ssr_client();
 
   const { data: user, error } = await client.auth.signInWithPassword({
@@ -48,7 +64,12 @@ export const signInUserWithEmailPassword = async (
     password,
   });
 
-  handleError(error);
+  if (error) {
+    console.error("[Auth] Sign in error:", error);
+    handleError(error);
+  }
+
+  console.log("[Auth] User signed in successfully:", user?.user?.id);
   return user?.user;
 };
 
@@ -56,9 +77,17 @@ export const signInUserWithEmailPassword = async (
 // ~ ======= Get current user
 // ~ =============================================>
 export const getCurrentUser = async () => {
+  console.log("[Auth] Getting current user");
   const client = await new Supabase().ssr_client();
+
   const { data: user, error } = await client.auth.getUser();
-  handleError(error);
+
+  if (error) {
+    console.error("[Auth] Get current user error:", error);
+    handleError(error);
+  }
+
+  console.log("[Auth] Current user:", user?.user?.id);
   return user.user;
 };
 
@@ -66,8 +95,16 @@ export const getCurrentUser = async () => {
 // ~ ======= Sign out
 // ~ =============================================>
 export const signOutUser = async () => {
+  console.log("[Auth] Signing out user");
   const client = await new Supabase().ssr_client();
+
   const { error } = await client.auth.signOut();
-  handleError(error);
+
+  if (error) {
+    console.error("[Auth] Sign out error:", error);
+    handleError(error);
+  }
+
+  console.log("[Auth] User signed out successfully");
   redirect("/auth/signin", RedirectType.replace);
 };

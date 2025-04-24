@@ -2,14 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
-import {
-  Play,
-  ArrowRight,
-  TrendingUp,
-  Shield,
-  Clock,
-  Globe,
-} from "lucide-react";
+import { ArrowRight, TrendingUp, Shield, Clock, Globe } from "lucide-react";
 import { Button } from "@/components/ui/button";
 // import BitcoinCalculator from "@/components/bitcoin-calculator"
 // import InvestmentPlan from "@/components/investment-plan/investment-plan"
@@ -61,23 +54,23 @@ export default function HomePage() {
                   up to 1:5
                 </h1>
                 <p className="text-gray-300 mb-8 max-w-lg text-lg">
-                  Experience professional trading with Dovexa. Start with as
+                  Experience professional trading with Vaultixes. Start with as
                   little as $100 and trade with confidence.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
-                  <Link href="/trade">
+                  <Link href="/auth/signup">
                     <Button className="bg-[#FFCC00] hover:bg-[#E6B800] text-black font-bold py-4 px-8 rounded-lg text-lg transition-all transform hover:scale-105">
                       Start Trading
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </Link>
-                  <Button
+                  {/* <Button
                     variant="outline"
                     className="rounded-lg p-4 border-white/30 hover:bg-white/10 transition-all transform hover:scale-105"
                   >
                     <Play className="h-5 w-5 mr-2" />
                     Watch Tutorial
-                  </Button>
+                  </Button> */}
                 </div>
               </motion.div>
               <motion.div
@@ -116,13 +109,13 @@ export default function HomePage() {
                 className="max-w-3xl mx-auto text-center"
               >
                 <h2 className="text-3xl sm:text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#FFCC00] to-white">
-                  Why Choose Dovexa?
+                  Why Choose Vaultixes?
                 </h2>
                 <p className="text-gray-400 text-lg">
                   Bitcoin is a new generation of decentralized digital currency,
-                  created and operating only on the Internet. With Dovexa, you
-                  can trade Bitcoin and other cryptocurrencies with professional
-                  tools and support.
+                  created and operating only on the Internet. With Vaultixes,
+                  you can trade Bitcoin and other cryptocurrencies with
+                  professional tools and support.
                 </p>
               </motion.div>
             </div>
@@ -150,7 +143,7 @@ export default function HomePage() {
                     We provide our clients with modern technologies. No delays
                     in order executions and most accurate quotes. Our trading
                     platform is available around the clock and on weekends.
-                    Dovexa customer service is available 24/7. We are
+                    Vaultixes customer service is available 24/7. We are
                     continuously adding new financial instruments.
                   </p>
                   <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm">
@@ -267,7 +260,7 @@ export default function HomePage() {
                 Live Currency Exchange Rates
               </motion.h2>
               <div className="mt-8 text-center">
-                <Link href="/exchange-rates">
+                <Link href="/auth/signup">
                   <Button
                     variant="outline"
                     className="border-[#FFCC00] text-[#FFCC00] hover:bg-[#FFCC00]/10 px-8 py-4 rounded-lg transform hover:scale-105 transition-all"
@@ -298,7 +291,7 @@ export default function HomePage() {
                     with leverage up to 1:5. Take advantage of both rising and
                     falling markets.
                   </p>
-                  <Link href="/cryptos">
+                  <Link href="/auth/signup">
                     <Button
                       variant="outline"
                       className="border-white/30 hover:border-[#FFCC00] text-white hover:text-[#FFCC00]"
@@ -322,7 +315,7 @@ export default function HomePage() {
                     specialized CFD platform. Perfect for advanced traders
                     looking for sophisticated strategies.
                   </p>
-                  <Link href="/options">
+                  <Link href="/auth/signup">
                     <Button
                       variant="outline"
                       className="border-white/30 hover:border-[#FFCC00] text-white hover:text-[#FFCC00]"

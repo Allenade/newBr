@@ -14,7 +14,7 @@ import { UserPermissions } from "@/lib/permissions/interfaces/permissions.dto";
 export const useUser = () => {
   const { user } = useAuth();
   const [userAbility, setUserAbility] = useState<MongoAbility>(
-    defineAbility(UserPermissions.Roles.admin)
+    defineAbility(UserPermissions.Roles.user)
   );
 
   const {
@@ -41,10 +41,11 @@ export const useUser = () => {
 
   // ~ ======= Set user ability  -->
   useEffect(() => {
-    if (profile)
+    if (profile) {
       setUserAbility(
         defineAbility(profile.role as keyof typeof UserPermissions.Roles)
       );
+    }
   }, [profile]);
 
   return {

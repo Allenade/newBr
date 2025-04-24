@@ -58,18 +58,20 @@ export const handleError = (error: unknown, customMessage?: string) => {
 
   // ~ ======= if custom error  ======= ~
   if (customMessage) {
-    console.log(customMessage);
+    console.error("[Custom Error]:", customMessage);
+    console.error("[Original Error]:", error);
     throw new Error(customMessage);
   }
 
   // ~ ======= if its an instance of Error ======= ~
   if (error instanceof Error) {
-    console.log(error.message);
+    console.error("[Error]:", error.message);
+    console.error("[Stack]:", error.stack);
     throw error;
   }
 
   // ~ ======= default ======= ~
-  console.log(error);
+  console.error("[Unknown Error]:", error);
   throw new Error("An unknown error occurred.");
 };
 
