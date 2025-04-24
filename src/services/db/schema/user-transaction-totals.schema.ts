@@ -54,6 +54,14 @@ export const userTransactionTotals = pgTable(
       using: sql`(auth.jwt() ->> "email")::text = (SELECT email FROM profiles WHERE id = user_id)`,
       withCheck: sql`(auth.jwt() ->> 'email')::text = (SELECT email FROM profiles WHERE id = user_id)`,
     }),
+
+    // Delete policy
+    deletePolicy: pgPolicy("Enable delete for admins only", {
+      as: "permissive",
+      to: "authenticated",
+      for: "delete",
+      using: sql`(SELECT role FROM profiles WHERE id = auth.uid()) = 'admin'`,
+    }),
   })
 ).enableRLS();
 

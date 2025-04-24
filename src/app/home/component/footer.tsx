@@ -79,7 +79,7 @@ export default function Footer() {
               </li>
               <li className="flex text-gray-400">
                 <Mail className="h-5 w-5 mr-3 text-[#FFCC00] flex-shrink-0" />
-                <span>support@dovexa.com</span>
+                <span>support@Vaultixes</span>
               </li>
               <li className="flex text-gray-400">
                 <Phone className="h-5 w-5 mr-3 text-[#FFCC00] flex-shrink-0" />

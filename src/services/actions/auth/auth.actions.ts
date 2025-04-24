@@ -5,6 +5,7 @@ import type { AuthActions } from "@/services/actions/auth/interfaces/auth.action
 import { handleError } from "@/lib/utils";
 import { createProfileAction } from "@/services/actions/profile/profile.actions";
 import { redirect, RedirectType } from "next/navigation";
+import { createClient } from "@supabase/supabase-js";
 
 // ~ =============================================>
 // ~ ======= Sign up User with email and Password
@@ -13,39 +14,71 @@ export const signUpWithEmailAndPassword = async (
   profileData: AuthActions.SignUpProps
 ) => {
   const { email, password } = profileData;
-  console.log("[Auth] Attempting to sign up user:", email);
-
   const client = await new Supabase().ssr_client();
 
-  // ~ ======= Create user account ======= ~
-  const { data: user, error: signUpError } = await client.auth.signUp({
-    email,
-    password,
-  });
+  try {
+    // Create service role client for admin operations
+    const serviceClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false,
+        },
+      }
+    );
 
-  if (signUpError) {
-    console.error("[Auth] Sign up error:", signUpError);
-    handleError(signUpError);
-  }
+    // Try to sign up first
+    const { data: user, error: signUpError } = await client.auth.signUp({
+      email,
+      password,
+    });
 
-  // ~ ======= Create profile if account has been created ======= ~
-  if (user) {
-    console.log("[Auth] User account created successfully:", user.user?.id);
-    try {
-      const profile = await createProfileAction({
-        id: user.user?.id,
-        ...profileData,
-        role: email === process.env.NEXT_PUBLIC_ADMIN_EMAIL ? "admin" : "user",
-      });
-      console.log("[Auth] Profile created successfully:", profile);
-      return profile;
-    } catch (error) {
-      console.error("[Auth] Failed to create profile:", error);
-      throw error;
+    // If we get a user already exists error, try to delete the existing user
+    if (signUpError?.message?.includes("User already registered")) {
+      // Get the user by email using the service role client
+      const { data: existingUser } = await serviceClient.auth.admin.listUsers();
+      const userToDelete = existingUser.users.find((u) => u.email === email);
+
+      if (userToDelete) {
+        // Delete the existing user
+        await serviceClient.auth.admin.deleteUser(userToDelete.id);
+
+        // Try to sign up again
+        const { data: newUser, error: newSignUpError } =
+          await client.auth.signUp({
+            email,
+            password,
+          });
+
+        handleError(newSignUpError);
+
+        if (newUser) {
+          return await createProfileAction({
+            id: newUser.user?.id,
+            ...profileData,
+          });
+        }
+      }
+    } else {
+      handleError(signUpError);
+
+      if (user) {
+        return await createProfileAction({
+          id: user.user?.id,
+          ...profileData,
+        });
+      }
     }
-  }
 
-  return null;
+    return null;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(`Failed to sign up: ${error.message}`);
+    }
+    throw new Error("An unexpected error occurred during sign up");
+  }
 };
 
 // ~ =============================================>
@@ -55,8 +88,6 @@ export const signInUserWithEmailPassword = async (
   signInData: AuthActions.SignInProps
 ) => {
   const { email, password } = signInData;
-  console.log("[Auth] Attempting to sign in user:", email);
-
   const client = await new Supabase().ssr_client();
 
   const { data: user, error } = await client.auth.signInWithPassword({
@@ -64,12 +95,7 @@ export const signInUserWithEmailPassword = async (
     password,
   });
 
-  if (error) {
-    console.error("[Auth] Sign in error:", error);
-    handleError(error);
-  }
-
-  console.log("[Auth] User signed in successfully:", user?.user?.id);
+  handleError(error);
   return user?.user;
 };
 
@@ -77,17 +103,9 @@ export const signInUserWithEmailPassword = async (
 // ~ ======= Get current user
 // ~ =============================================>
 export const getCurrentUser = async () => {
-  console.log("[Auth] Getting current user");
   const client = await new Supabase().ssr_client();
-
   const { data: user, error } = await client.auth.getUser();
-
-  if (error) {
-    console.error("[Auth] Get current user error:", error);
-    handleError(error);
-  }
-
-  console.log("[Auth] Current user:", user?.user?.id);
+  handleError(error);
   return user.user;
 };
 
@@ -95,16 +113,8 @@ export const getCurrentUser = async () => {
 // ~ ======= Sign out
 // ~ =============================================>
 export const signOutUser = async () => {
-  console.log("[Auth] Signing out user");
   const client = await new Supabase().ssr_client();
-
   const { error } = await client.auth.signOut();
-
-  if (error) {
-    console.error("[Auth] Sign out error:", error);
-    handleError(error);
-  }
-
-  console.log("[Auth] User signed out successfully");
+  handleError(error);
   redirect("/auth/signin", RedirectType.replace);
 };

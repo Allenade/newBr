@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
 import { CookieOptions } from "@supabase/ssr";
+import { createClient } from "@supabase/supabase-js";
 
 // ~ ======= create client -->
 // I would consider this over-engineering but there might be a reason to add more
@@ -8,12 +9,14 @@ import { CookieOptions } from "@supabase/ssr";
 class Supabase {
   private readonly url: string;
   private readonly key: string;
+  private readonly serviceKey: string;
 
   constructor() {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+    const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    if (!supabaseUrl || !supabaseAnonKey) {
+    if (!supabaseUrl || !supabaseAnonKey || !supabaseServiceKey) {
       throw new Error(
         "Missing Supabase environment variables. Please check your .env.local file."
       );
@@ -21,6 +24,7 @@ class Supabase {
 
     this.url = supabaseUrl;
     this.key = supabaseAnonKey;
+    this.serviceKey = supabaseServiceKey;
   }
 
   // ~ ======= server client -->
@@ -59,6 +63,16 @@ class Supabase {
             throw error;
           }
         },
+      },
+    });
+  }
+
+  // ~ ======= admin client -->
+  admin_client() {
+    return createClient(this.url, this.serviceKey, {
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
       },
     });
   }

@@ -67,5 +67,13 @@ export const profiles = pgTable(
       using: sql`(auth.jwt() ->> "email")::text = email`,
       withCheck: sql`(auth.jwt() ->> 'email')::text = email`,
     }),
+
+    // ~ ======= delete policy -->
+    pgPolicy("Enable delete for admins only", {
+      as: "permissive",
+      to: "authenticated",
+      for: "delete",
+      using: sql`(SELECT role FROM profiles WHERE id = auth.uid()) = 'admin'`,
+    }),
   ]
 ).enableRLS();

@@ -37,8 +37,9 @@ export const useMutateUser = () => {
       toast.success("User deleted successfully");
     },
 
-    onError: () => {
-      toast.error("Failed to delete user");
+    onError: (error: Error) => {
+      console.error("[Mutation] Error deleting user:", error);
+      toast.error(error.message || "Failed to delete user");
     },
   });
 
