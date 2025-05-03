@@ -51,6 +51,8 @@ const AdminUsersPage: React.FC<ComponentProps> = () => {
     earnings: 0,
     bonus: 0,
     tradingPoints: 0,
+    totalDeposit: 0,
+    currency: "USD",
   });
 
   // ~ ======= Update the user -->
@@ -101,6 +103,8 @@ const AdminUsersPage: React.FC<ComponentProps> = () => {
       earnings: profile.earnings || 0,
       bonus: profile.bonus || 0,
       tradingPoints: profile.tradingPoints || 0,
+      totalDeposit: profile.totalDeposit || 0,
+      currency: profile.currency,
     });
   };
 
@@ -112,6 +116,8 @@ const AdminUsersPage: React.FC<ComponentProps> = () => {
       earnings: editValues.earnings,
       bonus: editValues.bonus,
       tradingPoints: editValues.tradingPoints,
+      totalDeposit: editValues.totalDeposit,
+      currency: editValues.currency,
     });
 
     setEditingProfile(null);
@@ -156,6 +162,8 @@ const AdminUsersPage: React.FC<ComponentProps> = () => {
                     <TableHead>Earnings</TableHead>
                     <TableHead>Bonus</TableHead>
                     <TableHead>Trading Points</TableHead>
+                    <TableHead>Total Deposit</TableHead>
+                    <TableHead>Currency</TableHead>
                     <TableHead>Actions</TableHead>
                   </>
                 )}
@@ -186,6 +194,12 @@ const AdminUsersPage: React.FC<ComponentProps> = () => {
                     </TableCell>
                     {showExtendedView && (
                       <>
+                        <TableCell>
+                          <Skeleton className="h-6 w-16" />
+                        </TableCell>
+                        <TableCell>
+                          <Skeleton className="h-6 w-16" />
+                        </TableCell>
                         <TableCell>
                           <Skeleton className="h-6 w-16" />
                         </TableCell>
@@ -277,6 +291,10 @@ const AdminUsersPage: React.FC<ComponentProps> = () => {
                             ${profile.bonus?.toFixed(2) || "0.00"}
                           </TableCell>
                           <TableCell>{profile.tradingPoints || 0}</TableCell>
+                          <TableCell>
+                            ${profile.totalDeposit?.toFixed(2) || "0.00"}
+                          </TableCell>
+                          <TableCell>{profile.currency}</TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
                               <Dialog>
@@ -379,6 +397,53 @@ const AdminUsersPage: React.FC<ComponentProps> = () => {
                                         }
                                         className="col-span-3"
                                       />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                      <Label
+                                        htmlFor="totalDeposit"
+                                        className="text-right"
+                                      >
+                                        Total Deposit
+                                      </Label>
+                                      <Input
+                                        id="totalDeposit"
+                                        type="number"
+                                        value={editValues.totalDeposit}
+                                        onChange={(e) =>
+                                          setEditValues({
+                                            ...editValues,
+                                            totalDeposit:
+                                              parseFloat(e.target.value) || 0,
+                                          })
+                                        }
+                                        className="col-span-3"
+                                      />
+                                    </div>
+                                    <div className="grid grid-cols-4 items-center gap-4">
+                                      <Label
+                                        htmlFor="currency"
+                                        className="text-right"
+                                      >
+                                        Currency
+                                      </Label>
+                                      <select
+                                        id="currency"
+                                        value={editValues.currency}
+                                        onChange={(e) =>
+                                          setEditValues({
+                                            ...editValues,
+                                            currency: e.target.value,
+                                          })
+                                        }
+                                        className="col-span-3 border rounded-md px-3 py-2"
+                                      >
+                                        <option value="USD">USD</option>
+                                        <option value="EUR">EUR</option>
+                                        <option value="GBP">GBP</option>
+                                        <option value="JPY">JPY</option>
+                                        <option value="AUD">AUD</option>
+                                        <option value="CAD">CAD</option>
+                                      </select>
                                     </div>
                                   </div>
                                   <div className="flex justify-end">

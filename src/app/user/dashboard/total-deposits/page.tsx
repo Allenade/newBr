@@ -10,13 +10,6 @@ import { useUser } from "@/lib/hooks/user/use-user";
 const TotalDepositsPage = () => {
   const { profile, profileIsLoading } = useUser();
 
-  // Calculate grand total from existing profile data
-  const grandTotal =
-    (profile?.balance || 0) +
-    (profile?.earnings || 0) +
-    (profile?.bonus || 0) +
-    (profile?.tradingPoints || 0);
-
   return (
     <Block>
       <BlockBody>
@@ -80,13 +73,15 @@ const TotalDepositsPage = () => {
         {/* Grand Total Card */}
         <div className="mt-6 bg-white dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-800 shadow-sm p-6">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-50 mb-2">
-            Grand Total
+            Total Deposit
           </h3>
           <p className="text-3xl font-bold text-primary">
-            ${profileIsLoading ? "..." : grandTotal.toFixed(2)} USD
+            $
+            {profileIsLoading ? "..." : (profile?.totalDeposit || 0).toFixed(2)}{" "}
+            {profile?.currency || "USD"}
           </p>
           <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
-            Total of all your assets combined
+            Your total deposit amount
           </p>
         </div>
       </BlockBody>

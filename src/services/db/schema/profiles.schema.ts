@@ -33,6 +33,8 @@ export const profiles = pgTable(
     bonus: float().default(0).notNull(),
     earnings: float().default(0).notNull(),
     tradingPoints: float("trading_points").default(0).notNull(),
+    totalDeposit: float("total_deposit").default(0).notNull(),
+    currency: text("currency").default("USD").notNull(),
     isActive: boolean("is_active").default(true),
     role: userRoles("role").default("user").notNull(),
     createdAt: timestamp("created_at", { mode: "string" })
