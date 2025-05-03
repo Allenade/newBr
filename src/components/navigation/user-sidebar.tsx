@@ -24,6 +24,7 @@ import {
   LucideIcon,
   Calendar,
   NotepadTextDashed,
+  Wallet,
 } from "lucide-react";
 import Link from "next/link";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -172,11 +173,11 @@ const sidebarLinks: { label: string; icon: LucideIcon; href: string }[] = [
     label: "Total Deposits",
     icon: Coins,
   },
-  // {
-  //   href: "/user/dashboard/transactions",
-  //   label: "Transactions History",
-  //   icon: HistoryIcon,
-  // },
+  {
+    href: "/user/dashboard/withdrawals",
+    label: "Withdrawals",
+    icon: Wallet,
+  },
   {
     href: "/user/dashboard/trades",
     label: "Trades",

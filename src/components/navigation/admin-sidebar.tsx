@@ -25,6 +25,7 @@ import {
   User,
   Users,
   Coins,
+  Wallet,
 } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -159,6 +160,7 @@ const sidebarLinks: { label: string; icon: LucideIcon; href: string }[] = [
   { href: "/admin/overview", label: "Dashboard", icon: LayoutDashboard },
   // { href: "/admin/deposits", label: "Deposits", icon: Coins },
   { href: "/admin/transactions", label: "Transactions", icon: Coins },
+  { href: "/admin/withdrawals", label: "Withdrawals", icon: Wallet },
   // { href: "/admin/trades", label: "Trade History", icon: History },
   {
     href: "/admin/users",
