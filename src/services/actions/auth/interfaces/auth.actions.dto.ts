@@ -5,6 +5,8 @@ export namespace AuthActions {
     password: string;
     firstName: string;
     lastName: string;
+    currency: string;
+    country: string;
   };
 
   export type SignInProps = {
