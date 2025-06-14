@@ -54,7 +54,7 @@ export default function HomePage() {
                   up to 1:5
                 </h1>
                 <p className="text-gray-300 mb-8 max-w-lg text-lg">
-                  Experience professional trading with Vaultixes. Start with as
+                  Experience professional trading with Dovexa. Start with as
                   little as $100 and trade with confidence.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4">
@@ -109,13 +109,13 @@ export default function HomePage() {
                 className="max-w-3xl mx-auto text-center"
               >
                 <h2 className="text-3xl sm:text-4xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-[#FFCC00] to-white">
-                  Why Choose Vaultixes?
+                  Why Choose Dovexa?
                 </h2>
                 <p className="text-gray-400 text-lg">
                   Bitcoin is a new generation of decentralized digital currency,
-                  created and operating only on the Internet. With Vaultixes,
-                  you can trade Bitcoin and other cryptocurrencies with
-                  professional tools and support.
+                  created and operating only on the Internet. With Dovexa, you
+                  can trade Bitcoin and other cryptocurrencies with professional
+                  tools and support.
                 </p>
               </motion.div>
             </div>
@@ -143,7 +143,7 @@ export default function HomePage() {
                     We provide our clients with modern technologies. No delays
                     in order executions and most accurate quotes. Our trading
                     platform is available around the clock and on weekends.
-                    Vaultixes customer service is available 24/7. We are
+                    Dovexa customer service is available 24/7. We are
                     continuously adding new financial instruments.
                   </p>
                   <div className="bg-gradient-to-br from-gray-800/50 to-gray-900/50 rounded-2xl p-6 border border-gray-700/50 backdrop-blur-sm">

@@ -20,10 +20,10 @@ type ComponentProps = {
 const AdminDashboardLayout: React.FC<ComponentProps> = ({ children }) => {
   const router = useRouter();
   const { user, isLoadingUser } = useAuth();
-  const { userAbility } = useUser();
+  const { userAbility, profileIsLoading } = useUser();
 
   // ~ ======= Loading state ======= ~
-  if (isLoadingUser) {
+  if (isLoadingUser || profileIsLoading) {
     return (
       <div className="w-full h-[100dvh] flex items-center justify-center gap-3">
         <Loader2 size={20} className="animate-spin" />
@@ -45,6 +45,13 @@ const AdminDashboardLayout: React.FC<ComponentProps> = ({ children }) => {
       UserPermissions.Entities.admin_dashboard
     )
   ) {
+    console.log("Admin Layout - User is not admin, or ability is not loaded.");
+    console.log("Admin Layout - User email:", user?.email);
+    console.log("Admin Layout - User ability rules:", userAbility?.rules);
+    console.log(
+      "Admin Layout - NEXT_PUBLIC_ADMIN_EMAIL:",
+      process.env.NEXT_PUBLIC_ADMIN_EMAIL
+    );
     if (user?.email !== process.env.NEXT_PUBLIC_ADMIN_EMAIL) {
       // ~ ======= Redirect to user dashboard -->
       toast.error("You do not have access to this page");

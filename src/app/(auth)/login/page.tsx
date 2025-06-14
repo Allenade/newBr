@@ -17,6 +17,7 @@ export default function LoginPage() {
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("Login Page - handleSubmit triggered.");
     e.preventDefault();
     setIsLoading(true);
     setError("");
@@ -37,6 +38,12 @@ export default function LoginPage() {
         setError("Invalid credentials");
         return;
       }
+
+      console.log("Login Page - Logged in user email:", email);
+      console.log(
+        "Login Page - NEXT_PUBLIC_ADMIN_EMAIL:",
+        process.env.NEXT_PUBLIC_ADMIN_EMAIL
+      );
 
       // Check if this is the admin email
       if (email === process.env.NEXT_PUBLIC_ADMIN_EMAIL) {

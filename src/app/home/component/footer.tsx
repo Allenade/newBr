@@ -26,9 +26,7 @@ export default function Footer() {
                   className="object-contain"
                 /> */}
                 <div className="absolute inset-0 flex flex-col justify-center">
-                  <div className="text-[#FFCC00] font-bold text-xl">
-                    Vaultixes
-                  </div>
+                  <div className="text-[#FFCC00] font-bold text-xl">Dovexa</div>
                   {/* <div className="text-[#FFCC00] font-bold text-xl">
                     MARKETPIP
                   </div> */}
@@ -38,7 +36,7 @@ export default function Footer() {
             <p className="text-gray-400 mb-6 text-sm">
               Over 50000 TH/s Earned Daily! Are you looking for an Honest and
               Responsible Bitcoin Mining Company with Excellent Mining Packages
-              and Multi-level Marketing? Start Today at Vaultixes!!
+              and Multi-level Marketing? Start Today at Dovexa!!
             </p>
             <div className="flex space-x-4">
               <a
@@ -79,7 +77,7 @@ export default function Footer() {
               </li>
               <li className="flex text-gray-400">
                 <Mail className="h-5 w-5 mr-3 text-[#FFCC00] flex-shrink-0" />
-                <span>support@Vaultixes</span>
+                <span>support@Dovexa</span>
               </li>
               <li className="flex text-gray-400">
                 <Phone className="h-5 w-5 mr-3 text-[#FFCC00] flex-shrink-0" />
@@ -136,11 +134,11 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-lg font-bold mb-6">About Vaultixes</h3>
+            <h3 className="text-lg font-bold mb-6">About Dovexa</h3>
             <p className="text-gray-400 mb-6">
-              Vaultixes is totally different from its competitors trying to
-              achieve something special starting with the website design,
-              trading platform, and extremely functional.
+              Dovexa is totally different from its competitors trying to achieve
+              something special starting with the website design, trading
+              platform, and extremely functional.
             </p>
             <div className="flex items-center">
               <Shield className="h-6 w-6 text-[#FFCC00] mr-2" />
@@ -194,7 +192,7 @@ export default function Footer() {
         <div className="border-t border-gray-800 pt-6">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-gray-500 text-sm mb-4 md:mb-0">
-              © {new Date().getFullYear()} Vaultixes. All rights reserved.
+              © {new Date().getFullYear()} Dovexa. All rights reserved.
             </p>
             <div className="flex space-x-4 text-sm">
               <Link

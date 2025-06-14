@@ -110,7 +110,7 @@ export default function Header() {
               <div className="relative h-14 w-40">
                 <div className="absolute inset-0 flex flex-col justify-center">
                   <div className="text-[#FFCC00] font-bold text-xl">
-                    Vaultixes
+                    Dovexa{" "}
                   </div>
                   {/* <div className="text-[#FFCC00] font-bold text-xl">
                     MARKETPIP
